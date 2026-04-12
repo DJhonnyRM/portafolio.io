@@ -8,15 +8,20 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #fafaf8;
-    --surface: #f4f3ef;
-    --border: #e2e0d8;
-    --border-dark: #c8c4b8;
-    --ink: #1a1916;
-    --ink-mid: #4a4843;
-    --ink-light: #8a8780;
-    --accent: #1a1916;
-    --accent-warm: #8b6f47;
+    --bg: #0b0e11;
+    --surface: #111417;
+    --surface2: #161a1f;
+    --border: #1f2429;
+    --border-mid: #2a3138;
+    --border-bright: #3a4550;
+    --ink: #e8eaed;
+    --ink-mid: #8b9099;
+    --ink-light: #4d5560;
+    --accent: #4af2a1;
+    --accent-dim: rgba(74,242,161,0.08);
+    --accent2: #38b2ff;
+    --accent2-dim: rgba(56,178,255,0.08);
+    --warn: #f59e0b;
     --mono: 'DM Mono', monospace;
     --serif: 'Cormorant Garamond', Georgia, serif;
     --sans: 'DM Sans', sans-serif;
@@ -33,18 +38,31 @@
     overflow-x: hidden;
   }
 
+  /* SUBTLE GRID BG */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(74,242,161,0.015) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(74,242,161,0.015) 1px, transparent 1px);
+    background-size: 60px 60px;
+    z-index: 0;
+    pointer-events: none;
+  }
+
   /* NAV */
   nav {
     position: fixed;
     top: 0; left: 0; right: 0;
     z-index: 100;
     padding: 0 60px;
-    height: 64px;
+    height: 60px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: rgba(250,250,248,0.92);
-    backdrop-filter: blur(16px);
+    background: rgba(11,14,17,0.9);
+    backdrop-filter: blur(20px);
     border-bottom: 1px solid var(--border);
   }
 
@@ -52,12 +70,12 @@
     font-family: var(--mono);
     font-size: 12px;
     color: var(--ink-light);
-    letter-spacing: 0.08em;
+    letter-spacing: 0.06em;
     font-weight: 300;
   }
 
   .nav-logo strong {
-    color: var(--ink);
+    color: var(--accent);
     font-weight: 500;
   }
 
@@ -70,23 +88,25 @@
   .nav-links a {
     color: var(--ink-light);
     text-decoration: none;
-    font-size: 12px;
-    letter-spacing: 0.1em;
+    font-size: 11px;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
     font-weight: 400;
     transition: color 0.2s;
     font-family: var(--mono);
   }
 
-  .nav-links a:hover { color: var(--ink); }
+  .nav-links a:hover { color: var(--accent); }
 
   /* HERO */
   .hero {
+    position: relative;
+    z-index: 1;
     min-height: 100vh;
     display: grid;
     grid-template-columns: 1fr 1fr;
     align-items: end;
-    padding: 64px 0 0;
+    padding: 60px 0 0;
   }
 
   .hero-left {
@@ -95,22 +115,32 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    min-height: calc(100vh - 64px);
+    min-height: calc(100vh - 60px);
   }
 
   .hero-eyebrow {
     font-family: var(--mono);
     font-size: 11px;
-    color: var(--ink-light);
+    color: var(--accent);
     letter-spacing: 0.15em;
     text-transform: uppercase;
     margin-bottom: 32px;
     font-weight: 300;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .hero-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 20px; height: 1px;
+    background: var(--accent);
   }
 
   .hero-name {
     font-family: var(--serif);
-    font-size: clamp(64px, 7vw, 100px);
+    font-size: clamp(60px, 6.5vw, 96px);
     font-weight: 300;
     line-height: 0.92;
     letter-spacing: -0.02em;
@@ -126,8 +156,8 @@
   .hero-meta {
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    padding-top: 40px;
+    gap: 0;
+    padding-top: 36px;
     border-top: 1px solid var(--border);
   }
 
@@ -135,13 +165,17 @@
     display: flex;
     align-items: baseline;
     gap: 16px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
   }
+
+  .meta-row:last-child { border-bottom: none; }
 
   .meta-label {
     font-family: var(--mono);
     font-size: 10px;
     color: var(--ink-light);
-    letter-spacing: 0.12em;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
     min-width: 80px;
     font-weight: 300;
@@ -151,22 +185,27 @@
     font-size: 13px;
     color: var(--ink-mid);
     font-weight: 300;
+    font-family: var(--mono);
   }
 
+  .meta-value .hl { color: var(--accent); }
+
   .hero-right {
+    position: relative;
+    z-index: 1;
     padding: 80px 60px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    min-height: calc(100vh - 64px);
+    min-height: calc(100vh - 60px);
   }
 
   .hero-desc {
-    font-size: 16px;
-    line-height: 1.75;
+    font-size: 15px;
+    line-height: 1.8;
     color: var(--ink-mid);
     font-weight: 300;
-    max-width: 440px;
+    max-width: 420px;
     margin-top: auto;
     padding-top: 60px;
   }
@@ -174,22 +213,22 @@
   .hero-actions {
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    margin-top: 48px;
+    gap: 10px;
+    margin-top: 40px;
   }
 
   .btn {
     display: inline-flex;
     align-items: center;
     justify-content: space-between;
-    padding: 14px 20px;
+    padding: 13px 18px;
     font-family: var(--mono);
     font-size: 11px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     text-decoration: none;
-    border: 1px solid var(--border-dark);
-    color: var(--ink);
+    border: 1px solid var(--border-mid);
+    color: var(--ink-mid);
     background: transparent;
     cursor: pointer;
     transition: all 0.2s;
@@ -197,13 +236,13 @@
   }
 
   .btn:hover {
-    background: var(--ink);
-    color: var(--bg);
-    border-color: var(--ink);
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-dim);
   }
 
-  .btn-arrow { opacity: 0.4; transition: opacity 0.2s, transform 0.2s; }
-  .btn:hover .btn-arrow { opacity: 1; transform: translateX(4px); }
+  .btn-arrow { transition: transform 0.2s; }
+  .btn:hover .btn-arrow { transform: translateX(4px); }
 
   .avail-badge {
     display: flex;
@@ -221,19 +260,21 @@
   .avail-dot {
     width: 5px; height: 5px;
     border-radius: 50%;
-    background: #5a8a5a;
+    background: var(--accent);
+    box-shadow: 0 0 6px var(--accent);
     flex-shrink: 0;
+    animation: glow-pulse 2.5s ease infinite;
   }
 
-  /* DIVIDER */
-  .section-divider {
-    border: none;
-    border-top: 1px solid var(--border);
-    margin: 0;
+  @keyframes glow-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
   }
 
   /* SECTION */
   .section {
+    position: relative;
+    z-index: 1;
     max-width: 1200px;
     margin: 0 auto;
     padding: 100px 60px;
@@ -245,7 +286,7 @@
     gap: 40px;
     align-items: baseline;
     margin-bottom: 64px;
-    padding-bottom: 24px;
+    padding-bottom: 20px;
     border-bottom: 1px solid var(--border);
   }
 
@@ -259,74 +300,199 @@
 
   .section-title {
     font-family: var(--serif);
-    font-size: 36px;
+    font-size: 34px;
     font-weight: 300;
     letter-spacing: -0.01em;
     color: var(--ink);
   }
 
-  /* SKILLS */
-  .skills-grid {
+  /* STATS */
+  .stats-row {
     display: grid;
-    grid-template-columns: 120px 1fr;
-    gap: 0;
+    grid-template-columns: repeat(3, 1fr);
+    border: 1px solid var(--border);
+    margin-bottom: 80px;
+    background: var(--surface);
   }
 
-  .skill-row {
-    display: contents;
+  .stat-box {
+    padding: 44px 36px;
+    border-right: 1px solid var(--border);
+    text-align: left;
   }
 
-  .skill-row-label {
-    padding: 28px 40px 28px 0;
-    border-bottom: 1px solid var(--border);
+  .stat-box:last-child { border-right: none; }
+
+  .stat-num {
+    font-family: var(--serif);
+    font-size: 60px;
+    font-weight: 300;
+    color: var(--accent);
+    display: block;
+    line-height: 1;
+    margin-bottom: 12px;
+    letter-spacing: -0.02em;
+  }
+
+  .stat-label {
     font-family: var(--mono);
-    font-size: 11px;
+    font-size: 10px;
     color: var(--ink-light);
-    letter-spacing: 0.08em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
     font-weight: 300;
-    display: flex;
-    align-items: flex-start;
-    padding-top: 32px;
   }
 
-  .skill-row-content {
-    padding: 28px 0 28px 0;
-    border-bottom: 1px solid var(--border);
+  /* ===================== */
+  /* SKILLS — NEW LAYOUT   */
+  /* ===================== */
+
+  .skills-matrix {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+
+  .skill-block {
+    background: var(--surface);
+    padding: 0;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    transition: background 0.2s;
   }
 
-  .skill-row-title {
-    font-size: 15px;
-    font-weight: 400;
+  .skill-block:hover {
+    background: var(--surface2);
+  }
+
+  .skill-block-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .skill-block-icon {
+    width: 28px; height: 28px;
+    border: 1px solid var(--border-mid);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--accent);
+    font-weight: 500;
+    letter-spacing: 0;
+  }
+
+  .skill-block-name {
+    font-family: var(--mono);
+    font-size: 11px;
     color: var(--ink);
-    margin-bottom: 8px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 500;
   }
 
-  .skill-tags {
+  .skill-block-cat {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--ink-light);
+    letter-spacing: 0.06em;
+    margin-left: auto;
+    font-weight: 300;
+  }
+
+  .skill-block-body {
+    padding: 16px 24px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+  }
+
+  .skill-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .skill-item-name {
+    font-size: 12px;
+    color: var(--ink-mid);
+    font-weight: 300;
+    min-width: 120px;
+    font-family: var(--mono);
+    letter-spacing: 0.03em;
+  }
+
+  .skill-bar-wrap {
+    flex: 1;
+    height: 2px;
+    background: var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .skill-bar {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    background: var(--accent);
+    opacity: 0.5;
+    transition: width 1s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  .skill-bar.blue { background: var(--accent2); }
+  .skill-bar.warm { background: var(--warn); }
+
+  .skill-item-lvl {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--ink-light);
+    letter-spacing: 0.08em;
+    min-width: 28px;
+    text-align: right;
+    font-weight: 300;
+  }
+
+  /* TAGS (for DB section at bottom) */
+  .skill-tags-wrap {
+    padding: 16px 24px 20px;
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
   }
 
-  .tag {
+  .s-tag {
     font-family: var(--mono);
     font-size: 10px;
     padding: 4px 10px;
-    background: var(--surface);
-    color: var(--ink-mid);
+    border: 1px solid var(--border-mid);
+    color: var(--ink-light);
     letter-spacing: 0.06em;
-    border: 1px solid var(--border);
     font-weight: 300;
+    background: var(--bg);
     transition: all 0.15s;
+    cursor: default;
   }
 
-  .tag:hover {
-    background: var(--ink);
-    color: var(--bg);
-    border-color: var(--ink);
+  .s-tag:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-dim);
+  }
+
+  .s-tag.blue:hover {
+    border-color: var(--accent2);
+    color: var(--accent2);
+    background: var(--accent2-dim);
+  }
+
+  /* Full-width block */
+  .skill-block.full {
+    grid-column: 1 / -1;
   }
 
   /* PROJECTS */
@@ -364,12 +530,25 @@
   .project-badge {
     font-family: var(--mono);
     font-size: 10px;
-    color: var(--ink-light);
+    color: var(--accent);
     letter-spacing: 0.1em;
     text-transform: uppercase;
     margin-bottom: 12px;
     font-weight: 300;
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
+
+  .project-badge::before {
+    content: '';
+    display: inline-block;
+    width: 4px; height: 4px;
+    background: var(--accent);
+  }
+
+  .project-badge.b { color: var(--accent2); }
+  .project-badge.b::before { background: var(--accent2); }
 
   .project-title {
     font-family: var(--serif);
@@ -382,7 +561,7 @@
   }
 
   .project-desc {
-    font-size: 14px;
+    font-size: 13px;
     line-height: 1.75;
     color: var(--ink-mid);
     font-weight: 300;
@@ -401,21 +580,28 @@
     font-size: 10px;
     color: var(--ink-light);
     padding: 3px 8px;
-    border: 1px solid var(--border);
+    border: 1px solid var(--border-mid);
     font-weight: 300;
     letter-spacing: 0.06em;
+    transition: all 0.15s;
+  }
+
+  .stack-item:hover {
+    color: var(--accent2);
+    border-color: var(--accent2);
+    background: var(--accent2-dim);
   }
 
   .project-arrow {
     font-size: 18px;
-    color: var(--border-dark);
+    color: var(--border-bright);
     padding-top: 4px;
     transition: transform 0.2s, color 0.2s;
   }
 
   .project-row:hover .project-arrow {
     transform: translate(4px, -4px);
-    color: var(--ink);
+    color: var(--accent);
   }
 
   /* TIMELINE */
@@ -456,7 +642,7 @@
   .timeline-sub {
     font-family: var(--mono);
     font-size: 11px;
-    color: var(--accent-warm);
+    color: var(--accent);
     margin-bottom: 14px;
     letter-spacing: 0.06em;
     font-weight: 300;
@@ -469,57 +655,22 @@
     font-weight: 300;
   }
 
-  /* STATS */
-  .stats-row {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    border: 1px solid var(--border);
-    margin-bottom: 80px;
-  }
-
-  .stat-box {
-    padding: 48px 40px;
-    border-right: 1px solid var(--border);
-    text-align: left;
-  }
-
-  .stat-box:last-child { border-right: none; }
-
-  .stat-num {
-    font-family: var(--serif);
-    font-size: 64px;
-    font-weight: 300;
-    color: var(--ink);
-    display: block;
-    line-height: 1;
-    margin-bottom: 12px;
-    letter-spacing: -0.02em;
-  }
-
-  .stat-label {
-    font-family: var(--mono);
-    font-size: 10px;
-    color: var(--ink-light);
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    font-weight: 300;
-  }
-
   /* CONTACT */
   .contact-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     border: 1px solid var(--border);
+    background: var(--border);
+    gap: 1px;
   }
 
   .contact-card {
-    padding: 48px 40px;
-    border-right: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
+    padding: 40px 36px;
+    background: var(--surface);
+    transition: background 0.2s;
   }
 
-  .contact-card:nth-child(2n) { border-right: none; }
-  .contact-card:nth-child(3), .contact-card:nth-child(4) { border-bottom: none; }
+  .contact-card:hover { background: var(--surface2); }
 
   .contact-label {
     font-family: var(--mono);
@@ -527,7 +678,7 @@
     color: var(--ink-light);
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    margin-bottom: 16px;
+    margin-bottom: 14px;
     font-weight: 300;
     display: block;
   }
@@ -543,31 +694,37 @@
   .contact-value a {
     color: inherit;
     text-decoration: none;
-    border-bottom: 1px solid var(--border);
-    transition: border-color 0.2s;
+    border-bottom: 1px solid var(--border-mid);
+    transition: border-color 0.2s, color 0.2s;
   }
 
-  .contact-value a:hover { border-color: var(--ink); }
+  .contact-value a:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
 
   /* FOOTER */
   footer {
+    position: relative;
+    z-index: 1;
     border-top: 1px solid var(--border);
-    padding: 28px 60px;
+    padding: 24px 60px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     font-family: var(--mono);
-    font-size: 11px;
+    font-size: 10px;
     color: var(--ink-light);
     letter-spacing: 0.08em;
     font-weight: 300;
+    background: var(--surface);
   }
 
-  /* SCROLL REVEAL */
+  /* REVEAL */
   .reveal {
     opacity: 0;
-    transform: translateY(12px);
-    transition: opacity 0.6s ease, transform 0.6s ease;
+    transform: translateY(10px);
+    transition: opacity 0.55s ease, transform 0.55s ease;
   }
 
   .reveal.visible {
@@ -575,57 +732,48 @@
     transform: none;
   }
 
-  /* HERO ENTRANCE */
+  /* HERO ANIMS */
   @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
+    from { opacity: 0; transform: translateY(8px); }
     to { opacity: 1; transform: none; }
   }
 
   .hero-eyebrow { animation: fadeIn 0.7s 0.1s both; }
-  .hero-name { animation: fadeIn 0.7s 0.25s both; }
-  .hero-meta { animation: fadeIn 0.7s 0.4s both; }
-  .hero-desc { animation: fadeIn 0.7s 0.35s both; }
+  .hero-name    { animation: fadeIn 0.7s 0.25s both; }
+  .hero-meta    { animation: fadeIn 0.7s 0.4s both; }
+  .hero-desc    { animation: fadeIn 0.7s 0.35s both; }
   .hero-actions { animation: fadeIn 0.7s 0.5s both; }
-  .avail-badge { animation: fadeIn 0.7s 0.6s both; }
+  .avail-badge  { animation: fadeIn 0.7s 0.6s both; }
 
   /* RESPONSIVE */
   @media (max-width: 900px) {
     nav { padding: 0 24px; }
     .nav-links { display: none; }
-
     .hero { grid-template-columns: 1fr; min-height: auto; }
     .hero-left { border-right: none; border-bottom: 1px solid var(--border); padding: 60px 24px 48px; }
     .hero-right { padding: 48px 24px 60px; }
-    .hero-name { font-size: 56px; }
+    .hero-name { font-size: 54px; }
     .hero-desc { padding-top: 0; }
-
     .section { padding: 60px 24px; }
     .section-header { grid-template-columns: 1fr; gap: 8px; }
-    .skills-grid { grid-template-columns: 1fr; }
-    .skill-row-label { padding: 20px 0 0; border-bottom: none; }
-    .skill-row-content { padding: 12px 0 24px; }
-
+    .skills-matrix { grid-template-columns: 1fr; }
+    .skill-block.full { grid-column: 1; }
     .project-row { grid-template-columns: 1fr auto; }
     .project-row > .project-index { display: none; }
     .project-row:hover { margin: 0; padding-left: 0; padding-right: 0; }
-
     .timeline-row { grid-template-columns: 1fr; gap: 8px; }
-
     .stats-row { grid-template-columns: 1fr; }
     .stat-box { border-right: none; border-bottom: 1px solid var(--border); }
     .stat-box:last-child { border-bottom: none; }
-
     .contact-grid { grid-template-columns: 1fr; }
-    .contact-card { border-right: none !important; }
-
-    footer { flex-direction: column; gap: 8px; padding: 24px; }
+    footer { flex-direction: column; gap: 8px; padding: 20px 24px; }
   }
 </style>
 </head>
 <body>
 
 <nav>
-  <div class="nav-logo"><strong>Jhonny Riascos</strong> · djhonnyrm</div>
+  <div class="nav-logo"><strong>djhonnyrm</strong>.sec</div>
   <ul class="nav-links">
     <li><a href="#skills">Skills</a></li>
     <li><a href="#projects">Projects</a></li>
@@ -649,11 +797,15 @@
       </div>
       <div class="meta-row">
         <span class="meta-label">Semestre</span>
-        <span class="meta-value">VI · Universidad de Manizales</span>
+        <span class="meta-value"><span class="hl">VI</span> · Universidad de Manizales</span>
       </div>
       <div class="meta-row">
         <span class="meta-label">Ubicación</span>
         <span class="meta-value">Manizales, Colombia</span>
+      </div>
+      <div class="meta-row">
+        <span class="meta-label">Status</span>
+        <span class="meta-value"><span class="hl">open</span> to internships · 2026</span>
       </div>
     </div>
   </div>
@@ -678,7 +830,7 @@
       </div>
       <div class="avail-badge">
         <div class="avail-dot"></div>
-        Available for internships · 2026
+        Available for internships · SOC Analyst · IT Security
       </div>
     </div>
   </div>
@@ -709,83 +861,209 @@
     <h2 class="section-title">Arsenal técnico</h2>
   </div>
 
-  <div class="skills-grid">
-    <div class="skill-row reveal">
-      <div class="skill-row-label">Pentest</div>
-      <div class="skill-row-content">
-        <div class="skill-row-title">Penetration Testing</div>
-        <div class="skill-tags">
-          <span class="tag">Metasploit</span><span class="tag">Nmap</span>
-          <span class="tag">Hydra</span><span class="tag">EternalBlue</span>
-          <span class="tag">MS17-010</span><span class="tag">MS12-020</span>
+  <div class="skills-matrix">
+
+    <!-- Penetration Testing -->
+    <div class="skill-block reveal">
+      <div class="skill-block-header">
+        <div class="skill-block-icon">PT</div>
+        <span class="skill-block-name">Penetration Testing</span>
+        <span class="skill-block-cat">Offensive</span>
+      </div>
+      <div class="skill-block-body">
+        <div class="skill-item">
+          <span class="skill-item-name">Metasploit</span>
+          <div class="skill-bar-wrap"><div class="skill-bar" data-w="88"></div></div>
+          <span class="skill-item-lvl">ADV</span>
+        </div>
+        <div class="skill-item">
+          <span class="skill-item-name">Nmap / Enum</span>
+          <div class="skill-bar-wrap"><div class="skill-bar" data-w="90"></div></div>
+          <span class="skill-item-lvl">ADV</span>
+        </div>
+        <div class="skill-item">
+          <span class="skill-item-name">Hydra</span>
+          <div class="skill-bar-wrap"><div class="skill-bar" data-w="75"></div></div>
+          <span class="skill-item-lvl">INT</span>
+        </div>
+        <div class="skill-item">
+          <span class="skill-item-name">EternalBlue</span>
+          <div class="skill-bar-wrap"><div class="skill-bar" data-w="80"></div></div>
+          <span class="skill-item-lvl">INT</span>
+        </div>
+        <div class="skill-item">
+          <span class="skill-item-name">John / Hashcat</span>
+          <div class="skill-bar-wrap"><div class="skill-bar" data-w="70"></div></div>
+          <span class="skill-item-lvl">INT</span>
         </div>
       </div>
     </div>
-    <div class="skill-row reveal">
-      <div class="skill-row-label">Web</div>
-      <div class="skill-row-content">
-        <div class="skill-row-title">Web Security</div>
-        <div class="skill-tags">
-          <span class="tag">Burp Suite</span><span class="tag">OWASP Top 10</span>
-          <span class="tag">SQL Injection</span><span class="tag">JWT Attacks</span>
-          <span class="tag">IDOR</span><span class="tag">XSS</span>
+
+    <!-- Web Security -->
+    <div class="skill-block reveal">
+      <div class="skill-block-header">
+        <div class="skill-block-icon">WS</div>
+        <span class="skill-block-name">Web Security</span>
+        <span class="skill-block-cat">OWASP</span>
+      </div>
+      <div class="skill-block-body">
+        <div class="skill-item">
+          <span class="skill-item-name">Burp Suite</span>
+          <div class="skill-bar-wrap"><div class="skill-bar blue" data-w="85"></div></div>
+          <span class="skill-item-lvl">ADV</span>
+        </div>
+        <div class="skill-item">
+          <span class="skill-item-name">SQL Injection</span>
+          <div class="skill-bar-wrap"><div class="skill-bar blue" data-w="82"></div></div>
+          <span class="skill-item-lvl">ADV</span>
+        </div>
+        <div class="skill-item">
+          <span class="skill-item-name">XSS / IDOR</span>
+          <div class="skill-bar-wrap"><div class="skill-bar blue" data-w="78"></div></div>
+          <span class="skill-item-lvl">INT</span>
+        </div>
+        <div class="skill-item">
+          <span class="skill-item-name">JWT Attacks</span>
+          <div class="skill-bar-wrap"><div class="skill-bar blue" data-w="72"></div></div>
+          <span class="skill-item-lvl">INT</span>
+        </div>
+        <div class="skill-item">
+          <span class="skill-item-name">OWASP Top 10</span>
+          <div class="skill-bar-wrap"><div class="skill-bar blue" data-w="88"></div></div>
+          <span class="skill-item-lvl">ADV</span>
         </div>
       </div>
     </div>
-    <div class="skill-row reveal">
-      <div class="skill-row-label">Forense</div>
-      <div class="skill-row-content">
-        <div class="skill-row-title">Digital Forensics</div>
-        <div class="skill-tags">
-          <span class="tag">Autopsy</span><span class="tag">Volatility</span>
-          <span class="tag">FTK Imager</span><span class="tag">Wireshark</span>
-          <span class="tag">SIFT</span>
+
+    <!-- Digital Forensics -->
+    <div class="skill-block reveal">
+      <div class="skill-block-header">
+        <div class="skill-block-icon">DF</div>
+        <span class="skill-block-name">Digital Forensics</span>
+        <span class="skill-block-cat">Defensive</span>
+      </div>
+      <div class="skill-block-body">
+        <div class="skill-item">
+          <span class="skill-item-name">Autopsy</span>
+          <div class="skill-bar-wrap"><div class="skill-bar" data-w="75"></div></div>
+          <span class="skill-item-lvl">INT</span>
+        </div>
+        <div class="skill-item">
+          <span class="skill-item-name">Volatility</span>
+          <div class="skill-bar-wrap"><div class="skill-bar" data-w="68"></div></div>
+          <span class="skill-item-lvl">INT</span>
+        </div>
+        <div class="skill-item">
+          <span class="skill-item-name">Wireshark</span>
+          <div class="skill-bar-wrap"><div class="skill-bar" data-w="80"></div></div>
+          <span class="skill-item-lvl">INT</span>
+        </div>
+        <div class="skill-item">
+          <span class="skill-item-name">FTK Imager</span>
+          <div class="skill-bar-wrap"><div class="skill-bar" data-w="70"></div></div>
+          <span class="skill-item-lvl">INT</span>
+        </div>
+        <div class="skill-item">
+          <span class="skill-item-name">SIFT Workstation</span>
+          <div class="skill-bar-wrap"><div class="skill-bar" data-w="65"></div></div>
+          <span class="skill-item-lvl">INT</span>
         </div>
       </div>
     </div>
-    <div class="skill-row reveal">
-      <div class="skill-row-label">Infra</div>
-      <div class="skill-row-content">
-        <div class="skill-row-title">Infrastructure & Networks</div>
-        <div class="skill-tags">
-          <span class="tag">Active Directory</span><span class="tag">Windows Server</span>
-          <span class="tag">Proxmox VE</span><span class="tag">VirtualBox</span>
-          <span class="tag">SNMP</span><span class="tag">DNS</span>
+
+    <!-- Scripting & Dev -->
+    <div class="skill-block reveal">
+      <div class="skill-block-header">
+        <div class="skill-block-icon">SD</div>
+        <span class="skill-block-name">Scripting & Dev</span>
+        <span class="skill-block-cat">Automation</span>
+      </div>
+      <div class="skill-block-body">
+        <div class="skill-item">
+          <span class="skill-item-name">Python</span>
+          <div class="skill-bar-wrap"><div class="skill-bar warm" data-w="85"></div></div>
+          <span class="skill-item-lvl">ADV</span>
+        </div>
+        <div class="skill-item">
+          <span class="skill-item-name">Bash / Shell</span>
+          <div class="skill-bar-wrap"><div class="skill-bar warm" data-w="80"></div></div>
+          <span class="skill-item-lvl">INT</span>
+        </div>
+        <div class="skill-item">
+          <span class="skill-item-name">Node.js</span>
+          <div class="skill-bar-wrap"><div class="skill-bar warm" data-w="70"></div></div>
+          <span class="skill-item-lvl">INT</span>
+        </div>
+        <div class="skill-item">
+          <span class="skill-item-name">APIs REST</span>
+          <div class="skill-bar-wrap"><div class="skill-bar warm" data-w="75"></div></div>
+          <span class="skill-item-lvl">INT</span>
+        </div>
+        <div class="skill-item">
+          <span class="skill-item-name">Git</span>
+          <div class="skill-bar-wrap"><div class="skill-bar warm" data-w="78"></div></div>
+          <span class="skill-item-lvl">INT</span>
         </div>
       </div>
     </div>
-    <div class="skill-row reveal">
-      <div class="skill-row-label">Dev</div>
-      <div class="skill-row-content">
-        <div class="skill-row-title">Scripting & Development</div>
-        <div class="skill-tags">
-          <span class="tag">Python</span><span class="tag">Bash</span>
-          <span class="tag">Node.js</span><span class="tag">APIs REST</span>
-          <span class="tag">Git</span><span class="tag">Pandas</span>
-        </div>
+
+    <!-- Infra & Networks + AI (full width, tags) -->
+    <div class="skill-block reveal">
+      <div class="skill-block-header">
+        <div class="skill-block-icon">IN</div>
+        <span class="skill-block-name">Infrastructure & Networks</span>
+        <span class="skill-block-cat">Sysadmin</span>
+      </div>
+      <div class="skill-tags-wrap">
+        <span class="s-tag">Active Directory</span>
+        <span class="s-tag">Windows Server 2022</span>
+        <span class="s-tag">Proxmox VE</span>
+        <span class="s-tag">VirtualBox</span>
+        <span class="s-tag">DNS</span>
+        <span class="s-tag">SNMP</span>
+        <span class="s-tag">GPO</span>
+        <span class="s-tag">Ubuntu Server</span>
+        <span class="s-tag">Kali Linux</span>
+        <span class="s-tag">TCP/IP</span>
       </div>
     </div>
-    <div class="skill-row reveal">
-      <div class="skill-row-label">IA</div>
-      <div class="skill-row-content">
-        <div class="skill-row-title">Inteligencia Artificial</div>
-        <div class="skill-tags">
-          <span class="tag">Machine Learning</span><span class="tag">Scikit-learn</span>
-          <span class="tag">Phishing Detection</span><span class="tag">Feature Engineering</span>
-        </div>
+
+    <div class="skill-block reveal">
+      <div class="skill-block-header">
+        <div class="skill-block-icon">AI</div>
+        <span class="skill-block-name">Inteligencia Artificial</span>
+        <span class="skill-block-cat">ML / Security</span>
+      </div>
+      <div class="skill-tags-wrap">
+        <span class="s-tag blue">Machine Learning</span>
+        <span class="s-tag blue">Scikit-learn</span>
+        <span class="s-tag blue">Phishing Detection</span>
+        <span class="s-tag blue">Feature Engineering</span>
+        <span class="s-tag blue">Pandas</span>
+        <span class="s-tag blue">F1-Score / Recall</span>
+        <span class="s-tag blue">IU Training Cert.</span>
       </div>
     </div>
-    <div class="skill-row reveal">
-      <div class="skill-row-label">DB</div>
-      <div class="skill-row-content">
-        <div class="skill-row-title">Bases de Datos</div>
-        <div class="skill-tags">
-          <span class="tag">MySQL</span><span class="tag">SQL Queries</span>
-          <span class="tag">JOINs</span><span class="tag">Stored Procedures</span>
-          <span class="tag">SQLi Detection</span>
-        </div>
+
+    <!-- Databases full width -->
+    <div class="skill-block full reveal">
+      <div class="skill-block-header">
+        <div class="skill-block-icon">DB</div>
+        <span class="skill-block-name">Bases de Datos</span>
+        <span class="skill-block-cat">Data · SQLi Detection</span>
+      </div>
+      <div class="skill-tags-wrap">
+        <span class="s-tag">MySQL</span>
+        <span class="s-tag">SQL Queries</span>
+        <span class="s-tag">JOINs</span>
+        <span class="s-tag">Stored Procedures</span>
+        <span class="s-tag">Índices</span>
+        <span class="s-tag">Normalización</span>
+        <span class="s-tag">SQLi Detection</span>
+        <span class="s-tag">ERD Design</span>
       </div>
     </div>
+
   </div>
 </section>
 
@@ -820,12 +1098,12 @@
     <div class="project-row reveal">
       <div class="project-index">02</div>
       <div>
-        <div class="project-badge">Research · IEEE</div>
+        <div class="project-badge b">Research · IEEE</div>
         <div class="project-title">Amenazas IA en Ciberseguridad – Paper Académico</div>
         <p class="project-desc">
           Investigación sobre amenazas potenciadas con IA: deepfakes, WormGPT, malware polimórfico
           y phishing avanzado. Presentado en el XVII Encuentro Departamental de Semilleros RREDSI
-          Nodo Caldas. Formato IEEE con citaciones de congreso.
+          Nodo Caldas.
         </p>
         <div class="project-stack">
           <span class="stack-item">IEEE Format</span>
@@ -843,9 +1121,8 @@
         <div class="project-badge">Sysadmin · Lab</div>
         <div class="project-title">Active Directory Lab – Windows Server 2022</div>
         <p class="project-desc">
-          Implementación completa de Active Directory Domain Services en VirtualBox:
-          configuración DNS, promoción de dominio (djhonnyrm.local), creación de OU/GPO
-          y unión de cliente Windows 10 al dominio.
+          Implementación completa de AD DS en VirtualBox: configuración DNS, promoción de dominio
+          (djhonnyrm.local), creación de OU/GPO y unión de cliente Windows 10 al dominio.
         </p>
         <div class="project-stack">
           <span class="stack-item">Windows Server 2022</span>
@@ -873,9 +1150,7 @@
       <div>
         <div class="timeline-title">Ingeniería en Seguridad Informática</div>
         <div class="timeline-sub">Universidad de Manizales · Semestre VI</div>
-        <div class="timeline-desc">
-          Pentest · Forense Digital · Seguridad Web · Redes · Bases de Datos · Legislación en Ciberseguridad
-        </div>
+        <div class="timeline-desc">Pentest · Forense Digital · Seguridad Web · Redes · Bases de Datos · Legislación en Ciberseguridad</div>
       </div>
     </div>
     <div class="timeline-row reveal">
@@ -883,10 +1158,7 @@
       <div>
         <div class="timeline-title">Introducción a la Inteligencia Artificial</div>
         <div class="timeline-sub">IU Training · Nivel Principiante</div>
-        <div class="timeline-desc">
-          Certificación en fundamentos de IA con proyecto práctico: modelo de detección de phishing
-          entrenado con Python y Scikit-learn. Feature engineering, evaluación con precisión, recall y F1-score.
-        </div>
+        <div class="timeline-desc">Certificación con proyecto práctico: modelo de detección de phishing con Python y Scikit-learn. Feature engineering, precisión, recall y F1-score.</div>
       </div>
     </div>
     <div class="timeline-row reveal">
@@ -894,10 +1166,7 @@
       <div>
         <div class="timeline-title">HackTheBox – Starting Point & Beyond</div>
         <div class="timeline-sub">CTF Platform</div>
-        <div class="timeline-desc">
-          Máquinas de práctica en entornos Windows/Linux. Flujo enumeración → explotación.
-          Uso de Metasploit, Nmap y herramientas de análisis de red.
-        </div>
+        <div class="timeline-desc">Máquinas de práctica en entornos Windows/Linux. Flujo enumeración → explotación. Metasploit, Nmap y análisis de red.</div>
       </div>
     </div>
     <div class="timeline-row reveal">
@@ -905,10 +1174,7 @@
       <div>
         <div class="timeline-title">Propuesta Laboratorio Forense Digital</div>
         <div class="timeline-sub">Universidad de Manizales · Col. Policía Metropolitana</div>
-        <div class="timeline-desc">
-          Documentación ejecutiva y técnica para implementación de laboratorio forense:
-          Autopsy, SIFT, Volatility, Wireshark, FTK Imager. Colaboración interinstitucional.
-        </div>
+        <div class="timeline-desc">Documentación ejecutiva y técnica para implementación de laboratorio forense: Autopsy, SIFT, Volatility, Wireshark, FTK Imager.</div>
       </div>
     </div>
   </div>
@@ -953,9 +1219,29 @@
         setTimeout(() => e.target.classList.add('visible'), i * 60);
       }
     });
-  }, { threshold: 0.08 });
+  }, { threshold: 0.06 });
 
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // Animate skill bars on visibility
+  const barObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.querySelectorAll('.skill-bar').forEach(bar => {
+          const w = bar.getAttribute('data-w');
+          bar.style.width = w + '%';
+        });
+        barObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.2 });
+
+  document.querySelectorAll('.skill-block').forEach(block => {
+    block.querySelectorAll('.skill-bar').forEach(bar => {
+      bar.style.width = '0%';
+    });
+    barObserver.observe(block);
+  });
 </script>
 </body>
 </html>
