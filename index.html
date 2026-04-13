@@ -102,7 +102,7 @@
     min-height:100vh;
     display:grid;
     grid-template-columns:1fr 1fr;
-    align-items:end;
+    align-items:stretch;
     padding-top:60px;
   }
   .hero-left {
@@ -567,17 +567,8 @@
   }
   .reveal.visible { opacity:1; transform:none; }
 
-  @keyframes fadeUp {
-    from { opacity:0; transform:translateY(10px); }
-    to   { opacity:1; transform:none; }
-  }
-  .hero-eyebrow  { animation:fadeUp 0.7s 0.1s both; }
-  .hero-name     { animation:fadeUp 0.7s 0.2s both; }
-  .hero-subtitle { animation:fadeUp 0.7s 0.3s both; }
-  .hero-desc     { animation:fadeUp 0.7s 0.35s both; }
-  .hero-actions  { animation:fadeUp 0.7s 0.45s both; }
-  .avail-badge   { animation:fadeUp 0.7s 0.55s both; }
-  .hero-meta     { animation:fadeUp 0.7s 0.4s both; }
+  .hero-eyebrow, .hero-name, .hero-subtitle, .hero-desc,
+  .hero-actions, .avail-badge, .hero-meta { opacity:1; }
 
   @keyframes glitch {
     0%  { text-shadow:none; }
@@ -1170,7 +1161,7 @@
   <span>Ingeniería en Seguridad Informática · Universidad de Manizales</span>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
   // Scroll reveal
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((e, i) => {
@@ -1197,4 +1188,14 @@
     barObserver.observe(block);
   });
 
-  // Nav logo fl
+  // Nav logo flicker
+  const logo = document.querySelector('.nav-logo');
+  setInterval(() => {
+    if (Math.random() > 0.96) {
+      logo.style.opacity = '0.3';
+      setTimeout(() => logo.style.opacity = '1', 60);
+    }
+  }, 600);
+</script>
+</body>
+</html>
