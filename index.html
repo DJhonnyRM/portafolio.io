@@ -496,25 +496,58 @@
   }
   .contact-card {
     background:var(--surface); padding:36px 32px;
-    transition:background 0.2s;
+    transition:background 0.25s, border-color 0.25s;
+    position:relative; overflow:hidden; cursor:pointer;
   }
+  .contact-card::after {
+    content:''; position:absolute;
+    bottom:0; left:0; right:0; height:2px;
+    background:var(--accent); transform:scaleX(0);
+    transform-origin:left; transition:transform 0.3s ease;
+  }
+  .contact-card.ig::after { background: linear-gradient(90deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); }
   .contact-card:hover { background:var(--surface2); }
+  .contact-card:hover::after { transform:scaleX(1); }
+
   .contact-label {
     font-family:var(--mono); font-size:10px;
     color:var(--ink-light); letter-spacing:0.12em;
     text-transform:uppercase; margin-bottom:12px;
-    font-weight:300; display:block;
+    font-weight:300; display:flex; align-items:center; gap:8px;
+  }
+  .contact-label-icon {
+    width:16px; height:16px; flex-shrink:0; opacity:0.5;
   }
   .contact-value {
     font-family:var(--syne); font-size:18px;
     font-weight:700; color:#fff;
+    display:flex; align-items:center; justify-content:space-between;
   }
   .contact-value a {
     color:inherit; text-decoration:none;
-    border-bottom:1px solid var(--border-mid);
-    transition:border-color 0.2s, color 0.2s;
+    transition:color 0.2s;
   }
-  .contact-value a:hover { color:var(--accent); border-color:var(--accent); }
+  .contact-card:hover .contact-value a { color:var(--accent); }
+  .contact-card.ig:hover .contact-value a { color:#e6683c; }
+  .contact-card.gh:hover .contact-value a { color:var(--accent); }
+  .contact-card.mail:hover .contact-value a { color:var(--accent2); }
+  .contact-card.mail::after { background:var(--accent2); }
+
+  .contact-arrow {
+    font-size:16px; color:var(--border-hi);
+    transition:transform 0.2s, color 0.2s; flex-shrink:0;
+  }
+  .contact-card:hover .contact-arrow {
+    transform:translate(3px,-3px); color:var(--accent);
+  }
+  .contact-card.ig:hover .contact-arrow { color:#e6683c; }
+  .contact-card.mail:hover .contact-arrow { color:var(--accent2); }
+
+  .contact-meta {
+    font-family:var(--mono); font-size:10px;
+    color:var(--ink-light); margin-top:10px;
+    letter-spacing:0.06em; font-weight:300;
+  }
 
   /* ── FOOTER ── */
   footer {
@@ -1011,22 +1044,65 @@
   </div>
 
   <div class="contact-grid reveal">
-    <div class="contact-card">
-      <span class="contact-label">Ubicación</span>
-      <div class="contact-value">Manizales, Colombia 🇨🇴</div>
+
+    <div class="contact-card ig" onclick="window.open('https://instagram.com/duvanriascos','_blank')">
+      <div class="contact-label">
+        <svg class="contact-label-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+          <circle cx="12" cy="12" r="4"/>
+          <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none"/>
+        </svg>
+        Instagram
+      </div>
+      <div class="contact-value">
+        <a href="https://instagram.com/duvanriascos" target="_blank">@duvanriascos</a>
+        <span class="contact-arrow">↗</span>
+      </div>
+      <div class="contact-meta">Contenido · Ciberseguridad · Tech</div>
     </div>
-    <div class="contact-card">
-      <span class="contact-label">Universidad</span>
-      <div class="contact-value">Universidad de Manizales</div>
+
+    <div class="contact-card gh" onclick="window.open('https://github.com/djhonnyrm','_blank')">
+      <div class="contact-label">
+        <svg class="contact-label-icon" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+        </svg>
+        GitHub
+      </div>
+      <div class="contact-value">
+        <a href="https://github.com/djhonnyrm" target="_blank">djhonnyrm</a>
+        <span class="contact-arrow">↗</span>
+      </div>
+      <div class="contact-meta">Proyectos · Labs · Scripts</div>
     </div>
-    <div class="contact-card">
-      <span class="contact-label">GitHub</span>
-      <div class="contact-value"><a href="https://github.com/djhonnyrm" target="_blank">github.com/djhonnyrm</a></div>
+
+    <div class="contact-card gh" onclick="window.open('https://hackthebox.com','_blank')">
+      <div class="contact-label">
+        <svg class="contact-label-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <polygon points="12 2 22 7 22 17 12 22 2 17 2 7"/>
+          <polyline points="12 22 12 12"/>
+          <polyline points="22 7 12 12"/>
+          <polyline points="2 7 12 12"/>
+        </svg>
+        HackTheBox
+      </div>
+      <div class="contact-meta">CTF · Starting Point · Active</div>
     </div>
-    <div class="contact-card">
-      <span class="contact-label">Email</span>
-      <div class="contact-value"><a href="mailto:Jduvan762@gmail.com">Jduvan762@gmail.com</a></div>
+
+    <div class="contact-card mail" onclick="window.location.href='mailto:Jduvan762@gmail.com'">
+      <div class="contact-label">
+        <svg class="contact-label-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="2" y="4" width="20" height="16" rx="2"/>
+          <polyline points="2,4 12,13 22,4"/>
+        </svg>
+        Email
+      </div>
+      <div class="contact-value">
+        <a href="mailto:Jduvan762@gmail.com">Jduvan762@gmail.com</a>
+        <span class="contact-arrow">↗</span>
+      </div>
+      <div class="contact-meta">Respuesta en menos de 24h</div>
     </div>
+
   </div>
 </section>
 
