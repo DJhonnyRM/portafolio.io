@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Jhonny Riascos — Security Engineer</title>
+<title>Jhonny Riascos — Security Engineer & Bug Bounty Hunter</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 <style>
@@ -617,7 +617,7 @@
 <!-- ── HERO ── -->
 <div class="hero" id="about">
   <div class="hero-left">
-    <div class="hero-eyebrow">Security Engineer · Pentester · CTF Player</div>
+    <div class="hero-eyebrow">Security Engineer · Bug Bounty Hunter · CTF Player</div>
     <h1 class="hero-name">
       Jhonny<br>
       <span class="outline">Riascos</span>
@@ -648,8 +648,9 @@
       <div class="hero-subtitle">Information Security Engineering · Sem. VI</div>
       <p class="hero-desc">
         Estudiante de Ingeniería en Seguridad Informática en la Universidad de Manizales.
-        Me especializo en pruebas de penetración, análisis forense digital y seguridad en
-        aplicaciones web. Apasionado por los CTF en HackTheBox y la automatización con IA.
+        Investigador activo de bug bounty en HackerOne — apps Android y superficies web/API —
+        además de pruebas de penetración y análisis forense digital. Apasionado por los CTF
+        en HackTheBox y la automatización con IA.
       </p>
       <div class="hero-actions">
         <a href="https://github.com/djhonnyrm" class="btn" target="_blank">
@@ -692,8 +693,8 @@
         <span class="term-value"><span class="hl2">B2</span> · Upper-Intermediate</span>
       </div>
       <div class="term-item">
-        <span class="term-prompt">target_role</span>
-        <span class="term-value"><span class="hl2">SOC Analyst</span> · IT Sec</span>
+        <span class="term-prompt">bug_bounty</span>
+        <span class="term-value"><span class="hl">HackerOne</span> · researcher</span>
       </div>
     </div>
   </div>
@@ -921,6 +922,46 @@
 
     <div class="skill-block full reveal">
       <div class="skill-block-header">
+        <div class="skill-block-icon">BB</div>
+        <span class="skill-block-name">Bug Bounty & Mobile Security</span>
+        <span class="skill-block-cat">HackerOne · Android · Web/API</span>
+      </div>
+      <div class="skill-block-body" style="display:grid; grid-template-columns:1fr 1fr; gap:10px 48px;">
+        <div class="skill-item">
+          <span class="skill-item-name">APK Reversing · jadx</span>
+          <div class="skill-bar-wrap"><div class="skill-bar blue" data-w="86"></div></div>
+          <span class="skill-item-lvl">ADV</span>
+        </div>
+        <div class="skill-item">
+          <span class="skill-item-name">Recon · subfinder/httpx</span>
+          <div class="skill-bar-wrap"><div class="skill-bar blue" data-w="84"></div></div>
+          <span class="skill-item-lvl">ADV</span>
+        </div>
+        <div class="skill-item">
+          <span class="skill-item-name">Frida / Objection</span>
+          <div class="skill-bar-wrap"><div class="skill-bar blue" data-w="74"></div></div>
+          <span class="skill-item-lvl">INT</span>
+        </div>
+        <div class="skill-item">
+          <span class="skill-item-name">IDOR / SSRF / Auth</span>
+          <div class="skill-bar-wrap"><div class="skill-bar blue" data-w="78"></div></div>
+          <span class="skill-item-lvl">INT</span>
+        </div>
+        <div class="skill-item">
+          <span class="skill-item-name">MobSF · Docker</span>
+          <div class="skill-bar-wrap"><div class="skill-bar blue" data-w="76"></div></div>
+          <span class="skill-item-lvl">INT</span>
+        </div>
+        <div class="skill-item">
+          <span class="skill-item-name">Cert Pinning Bypass</span>
+          <div class="skill-bar-wrap"><div class="skill-bar blue" data-w="70"></div></div>
+          <span class="skill-item-lvl">INT</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="skill-block full reveal">
+      <div class="skill-block-header">
         <div class="skill-block-icon">DB</div>
         <span class="skill-block-name">Bases de Datos</span>
         <span class="skill-block-cat">Data · SQLi Detection</span>
@@ -973,6 +1014,30 @@
   <div class="projects-list">
     <div class="project-card reveal">
       <div>
+        <div class="project-badge red">Bug Bounty · HackerOne</div>
+        <div class="project-title">Investigación de Bug Bounty — Mobile & Web/API</div>
+        <p class="project-desc">
+          Investigación activa de seguridad en programas de HackerOne sobre aplicaciones
+          Android y superficies web/API. Flujo completo: reconocimiento y mapeo de assets,
+          reversing de APKs con jadx y análisis estático/dinámico (Frida, MobSF), e
+          identificación de fallos de lógica y autorización —IDOR, SSRF, bypass de
+          autenticación— bajo metodología OWASP. Trabajo continuo de recon, threat modeling
+          y estudio de reportes divulgados.
+        </p>
+        <div class="project-stack">
+          <span class="stack-item">HackerOne</span>
+          <span class="stack-item">jadx</span>
+          <span class="stack-item">Frida</span>
+          <span class="stack-item">MobSF</span>
+          <span class="stack-item">Burp Suite</span>
+          <span class="stack-item">Recon Automation</span>
+        </div>
+      </div>
+      <div class="project-num">01</div>
+    </div>
+
+    <div class="project-card reveal">
+      <div>
         <div class="project-badge">IA · Machine Learning</div>
         <div class="project-title">Detector de Phishing con ML – IU Training</div>
         <p class="project-desc">
@@ -989,7 +1054,7 @@
           <span class="stack-item">IU Training Cert.</span>
         </div>
       </div>
-      <div class="project-num">01</div>
+      <div class="project-num">02</div>
     </div>
 
     <div class="project-card reveal">
@@ -1008,7 +1073,7 @@
           <span class="stack-item">Malware Analysis</span>
         </div>
       </div>
-      <div class="project-num">02</div>
+      <div class="project-num">03</div>
     </div>
 
     <div class="project-card reveal">
@@ -1028,7 +1093,7 @@
           <span class="stack-item">VirtualBox</span>
         </div>
       </div>
-      <div class="project-num">03</div>
+      <div class="project-num">04</div>
     </div>
   </div>
 </section>
@@ -1048,6 +1113,16 @@
       <div class="timeline-sub">Universidad de Manizales · Semestre VI</div>
       <div class="timeline-desc">
         Pentest · Forense Digital · Seguridad Web · Redes · Bases de Datos · Legislación en Ciberseguridad
+      </div>
+    </div>
+    <div class="timeline-item reveal">
+      <div class="timeline-date">Abr 2026</div>
+      <div class="timeline-title">BSides Colombia 2026 — Pereira</div>
+      <div class="timeline-sub">Asistente & Voluntario · 16 horas académicas</div>
+      <div class="timeline-desc">
+        Evento internacional de ciberseguridad. Conferencias técnicas y sesiones especializadas
+        en seguridad ofensiva, defensiva, investigación y gestión de riesgos, además de labores
+        de voluntariado en la organización del evento.
       </div>
     </div>
     <div class="timeline-item reveal">
