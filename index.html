@@ -1109,18 +1109,30 @@
 
     <div class="project-card reveal">
       <div>
-        <div class="project-badge blue">Sysadmin</div>
-        <div class="project-title">Active Directory Lab – Windows Server 2022</div>
+        <div class="project-badge blue">Sysadmin · Infraestructura</div>
+        <div class="project-title">Datacenter On-Premise — Proyecto Final Sistemas Operativos II</div>
         <p class="project-desc">
-          Implementación completa de Active Directory Domain Services en VirtualBox:
-          configuración DNS, promoción de dominio (djhonnyrm.local), creación de OU/GPO
-          y unión de cliente Windows 10 al dominio. Troubleshooting de zonas DNS integradas con AD.
+          Diseño e implementación de un datacenter on-premise completo para una empresa simulada,
+          montado en VirtualBox con red entre hosts (switch/router) e integrando servicios Windows
+          y Linux con hardening en cada capa. Servicios desplegados: Windows Server 2022 (Active
+          Directory, DNS, WSUS) y hardening por GPO sobre clientes Windows 11 —bloqueo de
+          CMD/PowerShell/regedit/Panel de control, screen-lock y folder redirection—; servidor
+          LEMP con Laravel para señalización digital; Samba (CentOS) con permisos por áreas; SFTP
+          (OpenSSH + UFW); NOC con Zabbix y dashboard centralizado de CPU/memoria; y nube privada
+          Nextcloud. Bastionado transversal: firewall, bloqueo de root por SSH y políticas de seguridad.
         </p>
         <div class="project-stack">
           <span class="stack-item">Windows Server 2022</span>
-          <span class="stack-item">AD DS</span>
-          <span class="stack-item">DNS</span>
-          <span class="stack-item">GPO</span>
+          <span class="stack-item">Active Directory</span>
+          <span class="stack-item">DNS / WSUS</span>
+          <span class="stack-item">GPO Hardening</span>
+          <span class="stack-item">Nginx + Laravel</span>
+          <span class="stack-item">MySQL</span>
+          <span class="stack-item">Samba</span>
+          <span class="stack-item">SFTP / OpenSSH</span>
+          <span class="stack-item">Zabbix NOC</span>
+          <span class="stack-item">Nextcloud</span>
+          <span class="stack-item">Ubuntu 24.04 / CentOS</span>
           <span class="stack-item">VirtualBox</span>
         </div>
       </div>
