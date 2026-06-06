@@ -4,1044 +4,366 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Jhonny Riascos — Security Engineer & Bug Bounty Hunter</title>
+<meta name="description" content="Jhonny Riascos — Security Engineer, Bug Bounty Hunter y CTF Player. Estudiante de Ingeniería en Seguridad Informática, Universidad de Manizales.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg:          #0b0e11;
-    --surface:     #111417;
-    --surface2:    #161a1f;
-    --border:      #1f2429;
-    --border-mid:  #2a3138;
-    --border-hi:   #3a4550;
-    --ink:         #e8eaed;
-    --ink-mid:     #8b9099;
-    --ink-light:   #4d5560;
-    --accent:      #4af2a1;
-    --accent-dim:  rgba(74,242,161,0.07);
-    --accent2:     #38b2ff;
-    --accent2-dim: rgba(56,178,255,0.07);
-    --warn:        #f59e0b;
-    --mono: 'DM Mono', monospace;
-    --serif: 'Cormorant Garamond', Georgia, serif;
-    --sans: 'DM Sans', sans-serif;
-    --syne: 'Syne', sans-serif;
+  :root{
+    --bg:#0e1116;
+    --surface:#161b22;
+    --surface-2:#1b212b;
+    --border:#232b36;
+    --border-hi:#313b49;
+    --text:#e7eaf0;
+    --text-2:#9aa4b2;
+    --text-3:#6b7482;
+    --accent:#3b82f6;
+    --accent-strong:#2563eb;
+    --accent-soft:rgba(59,130,246,.12);
+    --amber:#f59e0b;
+    --radius:12px;
+    --sans:'Inter',system-ui,-apple-system,Segoe UI,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,monospace;
+    --maxw:1080px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg);color:var(--text);
+    font-family:var(--sans);font-weight:400;line-height:1.6;
+    -webkit-font-smoothing:antialiased;overflow-x:hidden;
+  }
+  a{color:inherit;text-decoration:none}
+  ::selection{background:var(--accent-soft);color:#fff}
+
+  .glow{
+    position:fixed;top:-220px;left:50%;transform:translateX(-50%);
+    width:900px;height:520px;border-radius:50%;
+    background:radial-gradient(circle, rgba(59,130,246,.12), transparent 65%);
+    filter:blur(40px);z-index:0;pointer-events:none;
   }
 
-  * { margin:0; padding:0; box-sizing:border-box; }
-  html { scroll-behavior: smooth; }
-
-  body {
-    background: var(--bg);
-    color: var(--ink);
-    font-family: var(--sans);
-    font-weight: 300;
-    overflow-x: hidden;
-    cursor: crosshair;
-  }
-
-  /* NOISE */
-  body::before {
-    content:'';
-    position:fixed; inset:0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-    pointer-events:none; z-index:9999; opacity:0.35;
-  }
-
-  /* SCAN LINE */
-  body::after {
-    content:'';
-    position:fixed; top:0; left:0; right:0; height:2px;
-    background: linear-gradient(90deg, transparent, var(--accent), transparent);
-    animation: scan 5s linear infinite;
-    z-index:9998; opacity:0.3;
-  }
-  @keyframes scan { 0%{top:0} 100%{top:100vh} }
-
-  /* GRID BG */
-  .grid-bg {
-    position:fixed; inset:0;
-    background-image:
-      linear-gradient(rgba(74,242,161,0.025) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(74,242,161,0.025) 1px, transparent 1px);
-    background-size: 60px 60px;
-    z-index:0; pointer-events:none;
-  }
-
-  /* ── NAV ── */
-  nav {
-    position:fixed; top:0; left:0; right:0; z-index:100;
-    padding:0 60px; height:60px;
-    display:flex; justify-content:space-between; align-items:center;
-    background: rgba(11,14,17,0.88);
-    backdrop-filter: blur(16px);
-    border-bottom: 1px solid var(--border);
-  }
-  .nav-logo {
-    font-family: var(--mono);
-    font-size: 13px;
-    color: var(--accent);
-    letter-spacing: 0.08em;
-  }
-  .nav-logo span { color: var(--ink-light); }
-  .nav-links { display:flex; gap:36px; list-style:none; }
-  .nav-links a {
-    color: var(--ink-light);
-    text-decoration:none;
-    font-family: var(--mono);
-    font-size:11px;
-    letter-spacing:0.12em;
-    text-transform:uppercase;
-    transition: color 0.2s;
-  }
-  .nav-links a:hover { color: var(--accent); }
-
-  /* ── HERO ── */
-  .hero {
-    position:relative; z-index:1;
-    min-height:100vh;
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    align-items:stretch;
-    padding-top:60px;
-  }
-  .hero-left {
-    padding:80px 60px;
-    border-right:1px solid var(--border);
-    display:flex; flex-direction:column; justify-content:flex-end;
-    min-height:calc(100vh - 60px);
-  }
-  .hero-eyebrow {
-    font-family: var(--mono);
-    font-size:11px; color:var(--accent);
-    letter-spacing:0.15em; text-transform:uppercase;
-    margin-bottom:32px;
-    display:flex; align-items:center; gap:10px;
-  }
-  .hero-eyebrow::before {
-    content:''; display:inline-block;
-    width:20px; height:1px; background:var(--accent);
-  }
-  .hero-name {
-    font-family: var(--syne);
-    font-size: clamp(58px, 6.5vw, 96px);
-    font-weight:800;
-    line-height:0.9;
-    letter-spacing:-3px;
-    color:#fff;
-    margin-bottom:48px;
-  }
-  .hero-name .outline {
-    color:transparent;
-    -webkit-text-stroke:1px var(--accent);
-    display:block;
-  }
-  .hero-meta {
-    padding-top:32px;
-    border-top:1px solid var(--border);
-    display:flex; flex-direction:column;
-  }
-  .meta-row {
-    display:flex; align-items:baseline; gap:16px;
-    padding:10px 0;
+  /* NAV */
+  nav{
+    position:fixed;top:0;left:0;right:0;z-index:100;height:64px;
+    display:flex;align-items:center;justify-content:space-between;padding:0 32px;
+    background:rgba(14,17,22,.72);backdrop-filter:blur(12px);
     border-bottom:1px solid var(--border);
   }
-  .meta-row:last-child { border-bottom:none; }
-  .meta-label {
-    font-family:var(--mono); font-size:10px;
-    color:var(--ink-light); letter-spacing:0.1em;
-    text-transform:uppercase; min-width:80px; font-weight:300;
-  }
-  .meta-value {
-    font-family:var(--mono); font-size:12px;
-    color:var(--ink-mid); font-weight:300;
-  }
-  .meta-value .hl  { color:var(--accent); font-weight:500; }
-  .meta-value .hl2 { color:var(--accent2); font-weight:500; }
+  .brand{font-weight:600;font-size:15px;letter-spacing:-.01em;display:flex;align-items:center;gap:9px}
+  .brand .dot{width:7px;height:7px;border-radius:50%;background:var(--accent)}
+  .nav-links{display:flex;gap:30px;list-style:none}
+  .nav-links a{font-size:13.5px;color:var(--text-2);transition:color .18s}
+  .nav-links a:hover{color:var(--text)}
 
-  .hero-right {
-    position:relative; z-index:1;
-    padding:80px 60px;
-    display:flex; flex-direction:column; justify-content:space-between;
-    min-height:calc(100vh - 60px);
-  }
+  section{position:relative;z-index:1}
 
-  /* blinking cursor subtitle */
-  .hero-subtitle {
-    font-family:var(--mono);
-    font-size:13px; color:var(--accent2);
-    letter-spacing:0.2em;
-    display:flex; align-items:center; gap:10px;
-    margin-bottom:28px;
+  /* HERO */
+  .hero{
+    position:relative;z-index:1;max-width:var(--maxw);margin:0 auto;
+    padding:140px 32px 72px;display:grid;grid-template-columns:1fr auto;gap:64px;align-items:center;
   }
-  .hero-subtitle::before {
-    content:'>'; color:var(--accent);
-    animation: blink 1s step-end infinite;
-  }
-  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+  .hero-eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.03em;color:var(--accent);text-transform:uppercase;margin-bottom:20px}
+  .hero h1{font-size:clamp(40px,6vw,62px);font-weight:700;letter-spacing:-.03em;line-height:1.02;margin-bottom:18px}
+  .hero-role{font-size:17px;color:var(--text-2);margin-bottom:24px}
+  .hero-role strong{color:var(--text);font-weight:600}
+  .hero-desc{font-size:15.5px;color:var(--text-2);max-width:540px;margin-bottom:30px;line-height:1.78}
+  .hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:26px}
+  .btn{display:inline-flex;align-items:center;gap:9px;padding:11px 18px;border-radius:9px;font-size:13.5px;font-weight:500;transition:all .18s;border:1px solid var(--border-hi);cursor:pointer}
+  .btn-primary{background:var(--accent-strong);border-color:var(--accent-strong);color:#fff}
+  .btn-primary:hover{background:var(--accent);border-color:var(--accent)}
+  .btn-ghost{color:var(--text);background:transparent}
+  .btn-ghost:hover{border-color:var(--text-3);background:var(--surface)}
+  .btn .arr{transition:transform .18s}
+  .btn:hover .arr{transform:translateX(3px)}
+  .hero-avail{display:flex;align-items:center;gap:9px;font-size:12.5px;color:var(--text-3);font-family:var(--mono)}
+  .hero-avail .pulse{width:7px;height:7px;border-radius:50%;background:#22c55e;animation:pulse 2.4s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(34,197,94,.45)}70%{box-shadow:0 0 0 8px rgba(34,197,94,0)}100%{box-shadow:0 0 0 0 rgba(34,197,94,0)}}
 
-  .hero-desc {
-    font-size:14px; line-height:1.85;
-    color:var(--ink-mid); font-weight:300;
-    max-width:420px; margin-bottom:36px;
-  }
-  .hero-actions { display:flex; flex-direction:column; gap:10px; margin-bottom:28px; }
+  .avatar-wrap{position:relative;flex-shrink:0}
+  .avatar{width:300px;height:300px;border-radius:50%;object-fit:cover;border:4px solid var(--surface);outline:1px solid var(--border-hi);box-shadow:0 26px 64px -26px rgba(0,0,0,.75);display:block}
+  .avatar-wrap::after{content:'';position:absolute;inset:-12px;border-radius:50%;border:1px solid var(--accent);opacity:.22}
 
-  .btn {
-    display:inline-flex; align-items:center;
-    justify-content:space-between;
-    padding:13px 18px;
-    font-family:var(--mono); font-size:11px;
-    letter-spacing:0.1em; text-transform:uppercase;
-    text-decoration:none;
-    border:1px solid var(--border-mid);
-    color:var(--accent); background:transparent;
-    cursor:pointer; transition:all 0.2s; font-weight:400;
-    position:relative; overflow:hidden;
-  }
-  .btn::before {
-    content:''; position:absolute; inset:0;
-    background:var(--accent); transform:translateX(-100%);
-    transition:transform 0.2s; z-index:-1;
-  }
-  .btn:hover { color:var(--bg); border-color:var(--accent); }
-  .btn:hover::before { transform:translateX(0); }
+  /* STATS */
+  .stats{max-width:var(--maxw);margin:0 auto;padding:0 32px}
+  .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:var(--surface)}
+  .stat{padding:22px 24px;border-right:1px solid var(--border)}
+  .stat:last-child{border-right:none}
+  .stat-label{font-family:var(--mono);font-size:10.5px;color:var(--text-3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:9px}
+  .stat-value{font-size:14.5px;font-weight:500}
+  .stat-value b{color:var(--accent);font-weight:600}
 
-  .btn-ghost { color:var(--ink-mid); }
-  .btn-ghost::before { background:var(--surface2); }
-  .btn-ghost:hover { color:var(--ink); border-color:var(--border-hi); }
-  .btn-arrow { transition:transform 0.2s; }
-  .btn:hover .btn-arrow { transform:translateX(4px); }
+  /* SECTION */
+  .section{max-width:var(--maxw);margin:0 auto;padding:92px 32px}
+  .sec-head{display:flex;align-items:center;gap:16px;margin-bottom:46px}
+  .sec-num{font-family:var(--mono);font-size:13px;color:var(--accent)}
+  .sec-title{font-size:26px;font-weight:700;letter-spacing:-.02em}
+  .sec-line{flex:1;height:1px;background:var(--border)}
 
-  .avail-badge {
-    display:flex; align-items:center; gap:8px;
-    font-family:var(--mono); font-size:10px;
-    color:var(--ink-light); letter-spacing:0.1em; text-transform:uppercase;
-    padding-top:24px; border-top:1px solid var(--border);
-  }
-  .avail-dot {
-    width:5px; height:5px; border-radius:50%;
-    background:var(--accent); box-shadow:0 0 6px var(--accent);
-    flex-shrink:0; animation:gpulse 2.5s ease infinite;
-  }
-  @keyframes gpulse { 0%,100%{opacity:1} 50%{opacity:0.35} }
+  /* SKILLS */
+  .skills{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .skill-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px 24px;transition:border-color .2s,transform .2s}
+  .skill-card:hover{border-color:var(--border-hi);transform:translateY(-2px)}
+  .skill-card.full{grid-column:1/-1}
+  .skill-head{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+  .skill-badge{width:36px;height:36px;border-radius:9px;background:var(--accent-soft);color:var(--accent);font-weight:700;font-size:12.5px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .skill-name{font-weight:600;font-size:14.5px}
+  .skill-cat{margin-left:auto;font-family:var(--mono);font-size:10px;color:var(--text-3);border:1px solid var(--border);padding:3px 9px;border-radius:20px;text-transform:uppercase;letter-spacing:.04em}
+  .skill-body{display:flex;flex-direction:column;gap:13px}
+  .skill-card.full .skill-body{display:grid;grid-template-columns:1fr 1fr;gap:13px 40px}
+  .skill-row{display:flex;align-items:center;gap:12px}
+  .skill-row-name{font-size:12.5px;color:var(--text-2);min-width:132px}
+  .bar{flex:1;height:4px;background:var(--surface-2);border-radius:3px;overflow:hidden}
+  .bar>i{display:block;height:100%;width:0;background:var(--accent);border-radius:3px;transition:width 1.1s cubic-bezier(.4,0,.2,1)}
+  .skill-lvl{font-family:var(--mono);font-size:9.5px;color:var(--text-3);min-width:26px;text-align:right}
 
-  /* ── TERMINAL STATUS BAR ── */
-  .terminal-bar {
-    border:1px solid var(--border);
-    background:var(--surface);
-    margin-bottom:0;
-    font-family:var(--mono);
-  }
-  .terminal-bar-top {
-    display:flex; align-items:center; gap:8px;
-    padding:9px 18px;
-    border-bottom:1px solid var(--border);
-    background:var(--surface2);
-  }
-  .term-dot { width:9px; height:9px; border-radius:50%; }
-  .term-dot.r { background:#ff5f57; }
-  .term-dot.y { background:#febc2e; }
-  .term-dot.g { background:#28c840; }
-  .term-title {
-    font-size:10px; color:var(--ink-light);
-    letter-spacing:0.08em; margin-left:6px;
-  }
-  .terminal-bar-body {
-    display:grid; grid-template-columns:repeat(4,1fr);
-  }
-  .term-item {
-    padding:18px 22px;
-    border-right:1px solid var(--border);
-    display:flex; flex-direction:column; gap:5px;
-  }
-  .term-item:last-child { border-right:none; }
-  .term-prompt {
-    font-size:10px; color:var(--ink-light);
-    letter-spacing:0.06em;
-    display:flex; align-items:center; gap:5px;
-  }
-  .term-prompt::before { content:'$'; color:var(--accent); font-weight:500; }
-  .term-value {
-    font-size:12px; color:var(--ink);
-    letter-spacing:0.04em; font-weight:400;
-    padding-left:14px;
-  }
-  .term-value .hl  { color:var(--accent); font-weight:500; }
-  .term-value .hl2 { color:var(--accent2); font-weight:500; }
+  /* PROJECTS */
+  .projects{display:flex;flex-direction:column;gap:16px}
+  .project{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:30px 32px;display:grid;grid-template-columns:1fr auto;gap:28px;transition:border-color .2s,transform .2s}
+  .project:hover{border-color:var(--border-hi);transform:translateY(-2px)}
+  .proj-badge{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--accent);margin-bottom:13px}
+  .proj-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--accent)}
+  .proj-badge.amber{color:var(--amber)} .proj-badge.amber::before{background:var(--amber)}
+  .proj-title{font-size:19px;font-weight:600;letter-spacing:-.01em;margin-bottom:12px;line-height:1.25}
+  .proj-desc{font-size:14px;color:var(--text-2);max-width:700px;margin-bottom:18px;line-height:1.72}
+  .tags{display:flex;flex-wrap:wrap;gap:8px}
+  .tag{font-family:var(--mono);font-size:11px;color:var(--text-3);border:1px solid var(--border);padding:4px 10px;border-radius:20px;transition:all .15s}
+  .tag:hover{color:var(--accent);border-color:var(--accent)}
+  .proj-num{font-size:44px;font-weight:700;color:var(--border-hi);line-height:1;user-select:none}
 
-  /* ── SECTION ── */
-  .section {
-    position:relative; z-index:1;
-    max-width:1200px; margin:0 auto;
-    padding:90px 60px;
-  }
-  .section-header {
-    display:flex; align-items:center; gap:20px;
-    margin-bottom:56px;
-    padding-bottom:20px;
-    border-bottom:1px solid var(--border);
-  }
-  .section-num {
-    font-family:var(--mono); font-size:11px;
-    color:var(--accent); letter-spacing:0.12em; font-weight:300;
-  }
-  .section-title {
-    font-family:var(--syne); font-size:28px;
-    font-weight:800; letter-spacing:-0.5px; color:#fff;
-  }
-  .section-line { flex:1; height:1px; background:var(--border); }
+  .findings{list-style:none;display:flex;flex-direction:column;gap:9px;margin:4px 0 20px;max-width:700px}
+  .findings li{font-size:13px;color:var(--text-2);line-height:1.5;display:flex;gap:11px;align-items:baseline}
+  .sev{font-family:var(--mono);font-size:10px;font-weight:500;padding:2px 0;min-width:46px;text-align:center;border-radius:5px;flex-shrink:0;text-transform:uppercase;letter-spacing:.04em}
+  .sev.high{color:var(--amber);border:1px solid rgba(245,158,11,.45);background:rgba(245,158,11,.06)}
+  .sev.med{color:var(--accent);border:1px solid rgba(59,130,246,.4);background:var(--accent-soft)}
 
-  /* ── SKILLS MATRIX ── */
-  .skills-matrix {
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:1px; background:var(--border);
-    border:1px solid var(--border);
-  }
+  /* TIMELINE */
+  .timeline{border-left:1px solid var(--border);padding-left:30px;margin-left:8px;display:flex;flex-direction:column;gap:36px}
+  .tl-item{position:relative}
+  .tl-item::before{content:'';position:absolute;left:-35px;top:5px;width:9px;height:9px;border-radius:50%;background:var(--bg);border:2px solid var(--accent)}
+  .tl-date{font-family:var(--mono);font-size:11.5px;color:var(--accent);margin-bottom:7px;letter-spacing:.03em}
+  .tl-title{font-size:16px;font-weight:600;margin-bottom:4px}
+  .tl-sub{font-size:12.5px;color:var(--text-3);margin-bottom:10px}
+  .tl-desc{font-size:13.5px;color:var(--text-2);line-height:1.65;max-width:700px}
 
-  .skill-block {
-    background:var(--surface);
-    display:flex; flex-direction:column;
-    transition:background 0.2s;
-  }
-  .skill-block:hover { background:var(--surface2); }
+  /* CONTACT */
+  .contact{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .card{display:flex;align-items:center;gap:16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px;transition:all .2s;cursor:pointer}
+  .card:hover{border-color:var(--border-hi);transform:translateY(-2px)}
+  .card .ic{width:42px;height:42px;border-radius:10px;background:var(--surface-2);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--text-2);transition:color .2s}
+  .card:hover .ic{color:var(--accent)}
+  .card-label{font-family:var(--mono);font-size:10.5px;color:var(--text-3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}
+  .card-value{font-size:14.5px;font-weight:500}
+  .card .ext{margin-left:auto;color:var(--text-3);transition:transform .2s,color .2s;flex-shrink:0}
+  .card:hover .ext{color:var(--accent);transform:translate(2px,-2px)}
 
-  /* Header with Syne bold label */
-  .skill-block-header {
-    display:flex; align-items:center; gap:14px;
-    padding:16px 22px 14px;
-    border-bottom:1px solid var(--border);
-    position:relative; overflow:hidden;
-  }
-  .skill-block-header::before {
-    content:''; position:absolute;
-    left:0; top:0; bottom:0; width:2px;
-    background:var(--accent); opacity:0; transition:opacity 0.2s;
-  }
-  .skill-block:hover .skill-block-header::before { opacity:1; }
+  /* FOOTER */
+  footer{border-top:1px solid var(--border);margin-top:48px}
+  .foot{max-width:var(--maxw);margin:0 auto;padding:26px 32px;display:flex;justify-content:space-between;gap:12px;font-size:12.5px;color:var(--text-3)}
 
-  .skill-block-icon {
-    font-family:var(--syne);
-    font-size:20px; font-weight:800;
-    color:var(--accent); letter-spacing:-0.04em;
-    min-width:36px; line-height:1; flex-shrink:0;
-    text-shadow:0 0 14px rgba(74,242,161,0.4);
-  }
-  .skill-block-name {
-    font-family:var(--syne);
-    font-size:13px; font-weight:700;
-    color:#fff; letter-spacing:0.02em;
-    text-transform:uppercase; line-height:1.1;
-  }
-  .skill-block-cat {
-    font-family:var(--mono); font-size:9px;
-    color:var(--ink-light); letter-spacing:0.1em;
-    margin-left:auto; font-weight:300;
-    background:var(--bg); border:1px solid var(--border-mid);
-    padding:2px 8px; text-transform:uppercase; flex-shrink:0;
-  }
+  /* REVEAL */
+  .reveal{opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease}
+  .reveal.in{opacity:1;transform:none}
 
-  /* Bars */
-  .skill-block-body {
-    padding:16px 22px 20px;
-    display:flex; flex-direction:column; gap:10px; flex:1;
-  }
-  .skill-item {
-    display:flex; align-items:center; gap:10px;
-  }
-  .skill-item-name {
-    font-family:var(--mono); font-size:11px;
-    color:var(--ink-mid); font-weight:300;
-    min-width:120px; letter-spacing:0.03em;
-  }
-  .skill-bar-wrap {
-    flex:1; height:2px; background:var(--border);
-    position:relative; overflow:hidden;
-  }
-  .skill-bar {
-    position:absolute; left:0; top:0; bottom:0;
-    background:var(--accent); opacity:0.55;
-    width:0; transition:width 1s cubic-bezier(0.4,0,0.2,1);
-  }
-  .skill-bar.blue { background:var(--accent2); }
-  .skill-bar.warm { background:var(--warn); }
-  .skill-item-lvl {
-    font-family:var(--mono); font-size:9px;
-    color:var(--ink-light); letter-spacing:0.08em;
-    min-width:28px; text-align:right; font-weight:300;
-  }
-
-  /* Tags */
-  .skill-tags-wrap {
-    padding:16px 22px 20px;
-    display:flex; flex-wrap:wrap; gap:6px;
-  }
-  .s-tag {
-    font-family:var(--mono); font-size:10px;
-    padding:4px 10px;
-    border:1px solid var(--border-mid);
-    color:var(--ink-light); letter-spacing:0.06em;
-    font-weight:300; background:var(--bg);
-    transition:all 0.15s; cursor:default;
-  }
-  .s-tag:hover { border-color:var(--accent); color:var(--accent); background:var(--accent-dim); }
-  .s-tag.blue:hover { border-color:var(--accent2); color:var(--accent2); background:var(--accent2-dim); }
-
-  .skill-block.full { grid-column:1/-1; }
-
-  /* ── PROJECTS ── */
-  .projects-list { display:grid; gap:0; border-top:1px solid var(--border); }
-  .project-card {
-    background:var(--surface);
-    border:1px solid var(--border);
-    border-top:none;
-    padding:36px 36px;
-    display:grid;
-    grid-template-columns:1fr auto;
-    gap:24px; align-items:start;
-    transition:border-color 0.2s, background 0.2s;
-    position:relative; overflow:hidden;
-  }
-  .project-card::after {
-    content:''; position:absolute; inset:0;
-    background:linear-gradient(135deg, rgba(74,242,161,0.03) 0%, transparent 60%);
-    opacity:0; transition:opacity 0.3s;
-  }
-  .project-card:hover { border-color:var(--accent2); background:var(--surface2); }
-  .project-card:hover::after { opacity:1; }
-
-  .project-badge {
-    display:inline-flex; align-items:center; gap:7px;
-    font-family:var(--mono); font-size:10px;
-    color:var(--accent); letter-spacing:0.12em;
-    text-transform:uppercase; margin-bottom:12px; font-weight:300;
-  }
-  .project-badge::before {
-    content:''; display:inline-block;
-    width:4px; height:4px; background:var(--accent);
-  }
-  .project-badge.red { color:var(--accent3, #ff4757); }
-  .project-badge.red::before { background:var(--accent3, #ff4757); }
-  .project-badge.blue { color:var(--accent2); }
-  .project-badge.blue::before { background:var(--accent2); }
-
-  .project-title {
-    font-family:var(--syne); font-size:20px;
-    font-weight:700; color:#fff;
-    margin-bottom:14px; letter-spacing:-0.3px; line-height:1.15;
-  }
-  .project-desc {
-    font-size:13px; line-height:1.75;
-    color:var(--ink-mid); font-weight:300;
-    margin-bottom:20px; max-width:600px;
-  }
-  .project-stack { display:flex; flex-wrap:wrap; gap:7px; }
-  .stack-item {
-    font-family:var(--mono); font-size:10px;
-    color:var(--ink-light); padding:3px 9px;
-    border:1px solid var(--border-mid); font-weight:300;
-    letter-spacing:0.06em; transition:all 0.15s;
-  }
-  .stack-item:hover { color:var(--accent2); border-color:var(--accent2); background:var(--accent2-dim); }
-
-  /* anonymized bug bounty findings list */
-  .findings {
-    list-style:none; display:flex; flex-direction:column; gap:8px;
-    margin:2px 0 20px; max-width:640px;
-  }
-  .findings li {
-    font-family:var(--mono); font-size:11.5px;
-    color:var(--ink-mid); line-height:1.5; font-weight:300;
-    display:flex; gap:11px; align-items:baseline;
-  }
-  .sev {
-    font-family:var(--mono); font-size:9px; font-weight:500;
-    letter-spacing:0.08em; padding:2px 0; min-width:46px;
-    text-align:center; border:1px solid var(--border-mid);
-    flex-shrink:0; text-transform:uppercase;
-  }
-  .sev.high { color:var(--warn); border-color:rgba(245,158,11,0.55); }
-  .sev.med  { color:var(--accent2); border-color:rgba(56,178,255,0.45); }
-
-  .project-num {
-    font-family:var(--syne); font-size:72px;
-    font-weight:800; color:transparent;
-    -webkit-text-stroke:1px var(--border-mid);
-    line-height:1; user-select:none;
-    transition:color 0.2s, -webkit-text-stroke-color 0.2s;
-  }
-  .project-card:hover .project-num { -webkit-text-stroke-color:var(--border-hi); }
-
-  /* ── TIMELINE ── */
-  .timeline {
-    border-left:1px solid var(--border);
-    padding-left:36px; margin-left:16px;
-    display:grid; gap:0;
-  }
-  .timeline-item {
-    position:relative; padding-bottom:44px;
-  }
-  .timeline-item:last-child { padding-bottom:0; }
-  .timeline-item::before {
-    content:''; position:absolute;
-    left:-41px; top:6px;
-    width:10px; height:10px;
-    border:1px solid var(--accent);
-    background:var(--bg); transform:rotate(45deg);
-  }
-  .timeline-date {
-    font-family:var(--mono); font-size:10px;
-    color:var(--accent); letter-spacing:0.15em;
-    text-transform:uppercase; margin-bottom:10px; font-weight:300;
-  }
-  .timeline-title {
-    font-family:var(--syne); font-size:18px;
-    font-weight:700; color:#fff; margin-bottom:6px;
-  }
-  .timeline-sub {
-    font-family:var(--mono); font-size:11px;
-    color:var(--ink-mid); margin-bottom:12px; letter-spacing:0.04em;
-  }
-  .timeline-desc {
-    font-size:13px; line-height:1.75;
-    color:var(--ink-mid); font-weight:300; opacity:0.85;
-  }
-
-  /* ── CONTACT ── */
-  .contact-grid {
-    display:grid; grid-template-columns:1fr 1fr;
-    border:1px solid var(--border); background:var(--border); gap:1px;
-  }
-  .contact-card {
-    background:var(--surface); padding:36px 32px;
-    transition:background 0.25s, border-color 0.25s;
-    position:relative; overflow:hidden; cursor:pointer;
-  }
-  .contact-card::after {
-    content:''; position:absolute;
-    bottom:0; left:0; right:0; height:2px;
-    background:var(--accent); transform:scaleX(0);
-    transform-origin:left; transition:transform 0.3s ease;
-  }
-  .contact-card.ig::after { background: linear-gradient(90deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); }
-  .contact-card:hover { background:var(--surface2); }
-  .contact-card:hover::after { transform:scaleX(1); }
-
-  .contact-label {
-    font-family:var(--mono); font-size:10px;
-    color:var(--ink-light); letter-spacing:0.12em;
-    text-transform:uppercase; margin-bottom:12px;
-    font-weight:300; display:flex; align-items:center; gap:8px;
-  }
-  .contact-label-icon {
-    width:16px; height:16px; flex-shrink:0; opacity:0.5;
-  }
-  .contact-value {
-    font-family:var(--syne); font-size:18px;
-    font-weight:700; color:#fff;
-    display:flex; align-items:center; justify-content:space-between;
-  }
-  .contact-value a {
-    color:inherit; text-decoration:none;
-    transition:color 0.2s;
-  }
-  .contact-card:hover .contact-value a { color:var(--accent); }
-  .contact-card.ig:hover .contact-value a { color:#e6683c; }
-  .contact-card.gh:hover .contact-value a { color:var(--accent); }
-  .contact-card.mail:hover .contact-value a { color:var(--accent2); }
-  .contact-card.mail::after { background:var(--accent2); }
-
-  .contact-arrow {
-    font-size:16px; color:var(--border-hi);
-    transition:transform 0.2s, color 0.2s; flex-shrink:0;
-  }
-  .contact-card:hover .contact-arrow {
-    transform:translate(3px,-3px); color:var(--accent);
-  }
-  .contact-card.ig:hover .contact-arrow { color:#e6683c; }
-  .contact-card.mail:hover .contact-arrow { color:var(--accent2); }
-
-  .contact-meta {
-    font-family:var(--mono); font-size:10px;
-    color:var(--ink-light); margin-top:10px;
-    letter-spacing:0.06em; font-weight:300;
-  }
-
-  /* ── FOOTER ── */
-  footer {
-    position:relative; z-index:1;
-    border-top:1px solid var(--border);
-    padding:22px 60px;
-    display:flex; justify-content:space-between; align-items:center;
-    font-family:var(--mono); font-size:10px;
-    color:var(--ink-light); letter-spacing:0.08em;
-    background:var(--surface);
-  }
-
-  /* ── REVEAL ── */
-  .reveal {
-    opacity:0; transform:translateY(12px);
-    transition:opacity 0.55s ease, transform 0.55s ease;
-  }
-  .reveal.visible { opacity:1; transform:none; }
-
-  .hero-eyebrow, .hero-name, .hero-subtitle, .hero-desc,
-  .hero-actions, .avail-badge, .hero-meta { opacity:1; }
-
-  @keyframes glitch {
-    0%  { text-shadow:none; }
-    20% { text-shadow:-2px 0 #ff4757, 2px 0 var(--accent2); }
-    21% { text-shadow:none; }
-    70% { text-shadow:2px 0 var(--accent), -2px 0 #ff4757; }
-    71% { text-shadow:none; }
-    100%{ text-shadow:none; }
-  }
-  .hero-name:hover { animation:glitch 0.4s linear; }
-
-  /* ── RESPONSIVE ── */
-  @media(max-width:900px){
-    nav { padding:0 24px; }
-    .nav-links { display:none; }
-    .hero { grid-template-columns:1fr; min-height:auto; }
-    .hero-left { border-right:none; border-bottom:1px solid var(--border); padding:60px 24px 48px; }
-    .hero-right { padding:48px 24px 60px; }
-    .hero-name { font-size:52px; letter-spacing:-2px; }
-    .section { padding:60px 24px; }
-    .skills-matrix { grid-template-columns:1fr; }
-    .skill-block.full { grid-column:1; }
-    .terminal-bar-body { grid-template-columns:repeat(2,1fr); }
-    .project-card { grid-template-columns:1fr; }
-    .project-num { display:none; }
-    .contact-grid { grid-template-columns:1fr; }
-    footer { flex-direction:column; gap:8px; padding:20px 24px; text-align:center; }
+  /* RESPONSIVE */
+  @media(max-width:860px){
+    nav{padding:0 20px}.nav-links{display:none}
+    .hero{grid-template-columns:1fr;padding:108px 20px 50px;gap:34px}
+    .avatar-wrap{order:-1}.avatar{width:150px;height:150px;border-width:3px}
+    .stats{padding:0 20px}.section{padding:64px 20px}
+    .stats-grid{grid-template-columns:1fr 1fr}.stat:nth-child(2){border-right:none}.stat:nth-child(1),.stat:nth-child(2){border-bottom:1px solid var(--border)}
+    .skills{grid-template-columns:1fr}.skill-card.full .skill-body{grid-template-columns:1fr}
+    .project{grid-template-columns:1fr;padding:26px 22px}.proj-num{display:none}
+    .contact{grid-template-columns:1fr}
+    .foot{flex-direction:column;text-align:center}
   }
 </style>
 </head>
 <body>
 
-<div class="grid-bg"></div>
+<div class="glow"></div>
 
 <nav>
-  <div class="nav-logo">djhonnyrm<span>.sec</span></div>
+  <div class="brand"><span class="dot"></span>Jhonny Riascos</div>
   <ul class="nav-links">
-    <li><a href="#about">About</a></li>
+    <li><a href="#about">Inicio</a></li>
     <li><a href="#skills">Skills</a></li>
-    <li><a href="#projects">Projects</a></li>
-    <li><a href="#education">Education</a></li>
-    <li><a href="#contact">Contact</a></li>
+    <li><a href="#projects">Proyectos</a></li>
+    <li><a href="#education">Educación</a></li>
+    <li><a href="#contact">Contacto</a></li>
   </ul>
 </nav>
 
-<!-- ── HERO ── -->
-<div class="hero" id="about">
-  <div class="hero-left">
+<!-- HERO -->
+<header class="hero" id="about">
+  <div>
     <div class="hero-eyebrow">Security Engineer · Bug Bounty Hunter · CTF Player</div>
-    <h1 class="hero-name">
-      Jhonny<br>
-      <span class="outline">Riascos</span>
-    </h1>
-    <div class="hero-meta">
-      <div class="meta-row">
-        <span class="meta-label">Carrera</span>
-        <span class="meta-value">Ing. Seguridad Informática</span>
-      </div>
-      <div class="meta-row">
-        <span class="meta-label">Semestre</span>
-        <span class="meta-value"><span class="hl">VI</span> · Universidad de Manizales</span>
-      </div>
-      <div class="meta-row">
-        <span class="meta-label">Ubicación</span>
-        <span class="meta-value">Manizales, Colombia</span>
-      </div>
-      <div class="meta-row">
-        <span class="meta-label">Status</span>
-        <span class="meta-value"><span class="hl">open</span> to internships · 2026</span>
-      </div>
+    <h1>Jhonny Riascos</h1>
+    <p class="hero-role">Estudiante de <strong>Ingeniería en Seguridad Informática</strong> · Universidad de Manizales · Manizales, Colombia</p>
+    <p class="hero-desc">
+      Investigador activo de bug bounty en HackerOne, con varios reportes enviados en
+      superficies web, API, móviles (Android), cloud y Web3. Trabajo también en pruebas de
+      penetración y análisis forense digital, y practico CTF en HackTheBox. Apasionado por la
+      automatización con IA aplicada a la seguridad.
+    </p>
+    <div class="hero-actions">
+      <a href="https://github.com/djhonnyrm" class="btn btn-primary" target="_blank" rel="noopener">GitHub <span class="arr">→</span></a>
+      <a href="https://hackthebox.com" class="btn btn-ghost" target="_blank" rel="noopener">HackTheBox <span class="arr">→</span></a>
+      <a href="#contact" class="btn btn-ghost">Contacto <span class="arr">→</span></a>
     </div>
+    <div class="hero-avail"><span class="pulse"></span>Disponible para prácticas · SOC Analyst · IT Security</div>
   </div>
-
-  <div class="hero-right">
-    <div></div>
-    <div>
-      <div class="hero-subtitle">Information Security Engineering · Sem. VI</div>
-      <p class="hero-desc">
-        Estudiante de Ingeniería en Seguridad Informática en la Universidad de Manizales.
-        Investigador activo de bug bounty en HackerOne, con varios reportes enviados en
-        superficies web, API, móviles (Android), cloud y Web3, además de pruebas de penetración
-        y análisis forense digital. Apasionado por los CTF en HackTheBox y la automatización con IA.
-      </p>
-      <div class="hero-actions">
-        <a href="https://github.com/djhonnyrm" class="btn" target="_blank">
-          <span>⬡ GitHub Profile</span>
-          <span class="btn-arrow">→</span>
-        </a>
-        <a href="https://hackthebox.com" class="btn btn-ghost" target="_blank">
-          <span>◈ HackTheBox</span>
-          <span class="btn-arrow">→</span>
-        </a>
-      </div>
-      <div class="avail-badge">
-        <div class="avail-dot"></div>
-        Available for internships · SOC Analyst · IT Security
-      </div>
-    </div>
+  <div class="avatar-wrap">
+    <img class="avatar" src="assets/profile.jpg" alt="Jhonny Duvan Riascos Mosquera" width="300" height="300">
   </div>
-</div>
+</header>
 
-<!-- ── TERMINAL STATUS ── -->
-<section class="section" style="padding-top:0; padding-bottom:0;">
-  <div class="terminal-bar reveal">
-    <div class="terminal-bar-top">
-      <span class="term-dot r"></span>
-      <span class="term-dot y"></span>
-      <span class="term-dot g"></span>
-      <span class="term-title">djhonnyrm@sec — status.sh</span>
+<!-- STATS -->
+<section class="stats">
+  <div class="stats-grid reveal">
+    <div class="stat">
+      <div class="stat-label">Semestre</div>
+      <div class="stat-value"><b>VI</b> / IX · 2026</div>
     </div>
-    <div class="terminal-bar-body">
-      <div class="term-item">
-        <span class="term-prompt">semestre</span>
-        <span class="term-value"><span class="hl">VI</span> / IX · 2026</span>
-      </div>
-      <div class="term-item">
-        <span class="term-prompt">ctf_platform</span>
-        <span class="term-value"><span class="hl">HackTheBox</span> · active</span>
-      </div>
-      <div class="term-item">
-        <span class="term-prompt">english</span>
-        <span class="term-value"><span class="hl2">B2</span> · Upper-Intermediate</span>
-      </div>
-      <div class="term-item">
-        <span class="term-prompt">bug_bounty</span>
-        <span class="term-value"><span class="hl">HackerOne</span> · researcher</span>
-      </div>
+    <div class="stat">
+      <div class="stat-label">CTF</div>
+      <div class="stat-value"><b>HackTheBox</b> · activo</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Bug Bounty</div>
+      <div class="stat-value"><b>HackerOne</b> · researcher</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Inglés</div>
+      <div class="stat-value"><b>B2</b> · Upper-Intermediate</div>
     </div>
   </div>
 </section>
 
-<!-- ── SKILLS ── -->
+<!-- SKILLS -->
 <section class="section" id="skills">
-  <div class="section-header reveal">
-    <span class="section-num">01</span>
-    <h2 class="section-title">Arsenal técnico</h2>
-    <div class="section-line"></div>
+  <div class="sec-head reveal">
+    <span class="sec-num">01</span>
+    <h2 class="sec-title">Arsenal técnico</h2>
+    <span class="sec-line"></span>
   </div>
 
-  <div class="skills-matrix">
+  <div class="skills">
 
-    <div class="skill-block reveal">
-      <div class="skill-block-header">
-        <div class="skill-block-icon">PT</div>
-        <span class="skill-block-name">Penetration Testing</span>
-        <span class="skill-block-cat">Offensive</span>
-      </div>
-      <div class="skill-block-body">
-        <div class="skill-item">
-          <span class="skill-item-name">Metasploit</span>
-          <div class="skill-bar-wrap"><div class="skill-bar" data-w="88"></div></div>
-          <span class="skill-item-lvl">ADV</span>
-        </div>
-        <div class="skill-item">
-          <span class="skill-item-name">Nmap / Enum</span>
-          <div class="skill-bar-wrap"><div class="skill-bar" data-w="90"></div></div>
-          <span class="skill-item-lvl">ADV</span>
-        </div>
-        <div class="skill-item">
-          <span class="skill-item-name">Hydra</span>
-          <div class="skill-bar-wrap"><div class="skill-bar" data-w="75"></div></div>
-          <span class="skill-item-lvl">INT</span>
-        </div>
-        <div class="skill-item">
-          <span class="skill-item-name">EternalBlue</span>
-          <div class="skill-bar-wrap"><div class="skill-bar" data-w="80"></div></div>
-          <span class="skill-item-lvl">INT</span>
-        </div>
-        <div class="skill-item">
-          <span class="skill-item-name">John / Hashcat</span>
-          <div class="skill-bar-wrap"><div class="skill-bar" data-w="70"></div></div>
-          <span class="skill-item-lvl">INT</span>
-        </div>
+    <div class="skill-card reveal">
+      <div class="skill-head"><div class="skill-badge">PT</div><span class="skill-name">Penetration Testing</span><span class="skill-cat">Offensive</span></div>
+      <div class="skill-body">
+        <div class="skill-row"><span class="skill-row-name">Metasploit</span><div class="bar"><i data-w="88"></i></div><span class="skill-lvl">ADV</span></div>
+        <div class="skill-row"><span class="skill-row-name">Nmap / Enum</span><div class="bar"><i data-w="90"></i></div><span class="skill-lvl">ADV</span></div>
+        <div class="skill-row"><span class="skill-row-name">Hydra</span><div class="bar"><i data-w="75"></i></div><span class="skill-lvl">INT</span></div>
+        <div class="skill-row"><span class="skill-row-name">EternalBlue</span><div class="bar"><i data-w="80"></i></div><span class="skill-lvl">INT</span></div>
+        <div class="skill-row"><span class="skill-row-name">John / Hashcat</span><div class="bar"><i data-w="70"></i></div><span class="skill-lvl">INT</span></div>
       </div>
     </div>
 
-    <div class="skill-block reveal">
-      <div class="skill-block-header">
-        <div class="skill-block-icon">WS</div>
-        <span class="skill-block-name">Web Security</span>
-        <span class="skill-block-cat">OWASP</span>
-      </div>
-      <div class="skill-block-body">
-        <div class="skill-item">
-          <span class="skill-item-name">Burp Suite</span>
-          <div class="skill-bar-wrap"><div class="skill-bar blue" data-w="85"></div></div>
-          <span class="skill-item-lvl">ADV</span>
-        </div>
-        <div class="skill-item">
-          <span class="skill-item-name">SQL Injection</span>
-          <div class="skill-bar-wrap"><div class="skill-bar blue" data-w="82"></div></div>
-          <span class="skill-item-lvl">ADV</span>
-        </div>
-        <div class="skill-item">
-          <span class="skill-item-name">XSS / IDOR</span>
-          <div class="skill-bar-wrap"><div class="skill-bar blue" data-w="78"></div></div>
-          <span class="skill-item-lvl">INT</span>
-        </div>
-        <div class="skill-item">
-          <span class="skill-item-name">JWT Attacks</span>
-          <div class="skill-bar-wrap"><div class="skill-bar blue" data-w="72"></div></div>
-          <span class="skill-item-lvl">INT</span>
-        </div>
-        <div class="skill-item">
-          <span class="skill-item-name">OWASP Top 10</span>
-          <div class="skill-bar-wrap"><div class="skill-bar blue" data-w="88"></div></div>
-          <span class="skill-item-lvl">ADV</span>
-        </div>
+    <div class="skill-card reveal">
+      <div class="skill-head"><div class="skill-badge">WS</div><span class="skill-name">Web Security</span><span class="skill-cat">OWASP</span></div>
+      <div class="skill-body">
+        <div class="skill-row"><span class="skill-row-name">Burp Suite</span><div class="bar"><i data-w="85"></i></div><span class="skill-lvl">ADV</span></div>
+        <div class="skill-row"><span class="skill-row-name">SQL Injection</span><div class="bar"><i data-w="82"></i></div><span class="skill-lvl">ADV</span></div>
+        <div class="skill-row"><span class="skill-row-name">XSS / IDOR</span><div class="bar"><i data-w="78"></i></div><span class="skill-lvl">INT</span></div>
+        <div class="skill-row"><span class="skill-row-name">JWT Attacks</span><div class="bar"><i data-w="72"></i></div><span class="skill-lvl">INT</span></div>
+        <div class="skill-row"><span class="skill-row-name">OWASP Top 10</span><div class="bar"><i data-w="88"></i></div><span class="skill-lvl">ADV</span></div>
       </div>
     </div>
 
-    <div class="skill-block reveal">
-      <div class="skill-block-header">
-        <div class="skill-block-icon">DF</div>
-        <span class="skill-block-name">Digital Forensics</span>
-        <span class="skill-block-cat">Defensive</span>
-      </div>
-      <div class="skill-block-body">
-        <div class="skill-item">
-          <span class="skill-item-name">Autopsy</span>
-          <div class="skill-bar-wrap"><div class="skill-bar" data-w="75"></div></div>
-          <span class="skill-item-lvl">INT</span>
-        </div>
-        <div class="skill-item">
-          <span class="skill-item-name">Volatility</span>
-          <div class="skill-bar-wrap"><div class="skill-bar" data-w="68"></div></div>
-          <span class="skill-item-lvl">INT</span>
-        </div>
-        <div class="skill-item">
-          <span class="skill-item-name">Wireshark</span>
-          <div class="skill-bar-wrap"><div class="skill-bar" data-w="80"></div></div>
-          <span class="skill-item-lvl">INT</span>
-        </div>
-        <div class="skill-item">
-          <span class="skill-item-name">FTK Imager</span>
-          <div class="skill-bar-wrap"><div class="skill-bar" data-w="70"></div></div>
-          <span class="skill-item-lvl">INT</span>
-        </div>
-        <div class="skill-item">
-          <span class="skill-item-name">SIFT Workstation</span>
-          <div class="skill-bar-wrap"><div class="skill-bar" data-w="65"></div></div>
-          <span class="skill-item-lvl">INT</span>
-        </div>
+    <div class="skill-card reveal">
+      <div class="skill-head"><div class="skill-badge">DF</div><span class="skill-name">Digital Forensics</span><span class="skill-cat">Defensive</span></div>
+      <div class="skill-body">
+        <div class="skill-row"><span class="skill-row-name">Autopsy</span><div class="bar"><i data-w="75"></i></div><span class="skill-lvl">INT</span></div>
+        <div class="skill-row"><span class="skill-row-name">Volatility</span><div class="bar"><i data-w="68"></i></div><span class="skill-lvl">INT</span></div>
+        <div class="skill-row"><span class="skill-row-name">Wireshark</span><div class="bar"><i data-w="80"></i></div><span class="skill-lvl">INT</span></div>
+        <div class="skill-row"><span class="skill-row-name">FTK Imager</span><div class="bar"><i data-w="70"></i></div><span class="skill-lvl">INT</span></div>
+        <div class="skill-row"><span class="skill-row-name">SIFT Workstation</span><div class="bar"><i data-w="65"></i></div><span class="skill-lvl">INT</span></div>
       </div>
     </div>
 
-    <div class="skill-block reveal">
-      <div class="skill-block-header">
-        <div class="skill-block-icon">SD</div>
-        <span class="skill-block-name">Scripting & Dev</span>
-        <span class="skill-block-cat">Automation</span>
-      </div>
-      <div class="skill-block-body">
-        <div class="skill-item">
-          <span class="skill-item-name">Python</span>
-          <div class="skill-bar-wrap"><div class="skill-bar warm" data-w="85"></div></div>
-          <span class="skill-item-lvl">ADV</span>
-        </div>
-        <div class="skill-item">
-          <span class="skill-item-name">Bash / Shell</span>
-          <div class="skill-bar-wrap"><div class="skill-bar warm" data-w="80"></div></div>
-          <span class="skill-item-lvl">INT</span>
-        </div>
-        <div class="skill-item">
-          <span class="skill-item-name">Node.js</span>
-          <div class="skill-bar-wrap"><div class="skill-bar warm" data-w="70"></div></div>
-          <span class="skill-item-lvl">INT</span>
-        </div>
-        <div class="skill-item">
-          <span class="skill-item-name">APIs REST</span>
-          <div class="skill-bar-wrap"><div class="skill-bar warm" data-w="75"></div></div>
-          <span class="skill-item-lvl">INT</span>
-        </div>
-        <div class="skill-item">
-          <span class="skill-item-name">Git</span>
-          <div class="skill-bar-wrap"><div class="skill-bar warm" data-w="78"></div></div>
-          <span class="skill-item-lvl">INT</span>
-        </div>
+    <div class="skill-card reveal">
+      <div class="skill-head"><div class="skill-badge">SD</div><span class="skill-name">Scripting & Dev</span><span class="skill-cat">Automation</span></div>
+      <div class="skill-body">
+        <div class="skill-row"><span class="skill-row-name">Python</span><div class="bar"><i data-w="85"></i></div><span class="skill-lvl">ADV</span></div>
+        <div class="skill-row"><span class="skill-row-name">Bash / Shell</span><div class="bar"><i data-w="80"></i></div><span class="skill-lvl">INT</span></div>
+        <div class="skill-row"><span class="skill-row-name">Node.js</span><div class="bar"><i data-w="70"></i></div><span class="skill-lvl">INT</span></div>
+        <div class="skill-row"><span class="skill-row-name">APIs REST</span><div class="bar"><i data-w="75"></i></div><span class="skill-lvl">INT</span></div>
+        <div class="skill-row"><span class="skill-row-name">Git</span><div class="bar"><i data-w="78"></i></div><span class="skill-lvl">INT</span></div>
       </div>
     </div>
 
-    <div class="skill-block reveal">
-      <div class="skill-block-header">
-        <div class="skill-block-icon">IN</div>
-        <span class="skill-block-name">Infrastructure & Networks</span>
-        <span class="skill-block-cat">Sysadmin</span>
-      </div>
-      <div class="skill-block-body">
-        <div class="skill-item">
-          <span class="skill-item-name">Active Directory</span>
-          <div class="skill-bar-wrap"><div class="skill-bar" data-w="80"></div></div>
-          <span class="skill-item-lvl">INT</span>
-        </div>
-        <div class="skill-item">
-          <span class="skill-item-name">Windows Server</span>
-          <div class="skill-bar-wrap"><div class="skill-bar" data-w="78"></div></div>
-          <span class="skill-item-lvl">INT</span>
-        </div>
-        <div class="skill-item">
-          <span class="skill-item-name">Proxmox / Virt.</span>
-          <div class="skill-bar-wrap"><div class="skill-bar" data-w="75"></div></div>
-          <span class="skill-item-lvl">INT</span>
-        </div>
-        <div class="skill-item">
-          <span class="skill-item-name">DNS / SNMP</span>
-          <div class="skill-bar-wrap"><div class="skill-bar" data-w="82"></div></div>
-          <span class="skill-item-lvl">INT</span>
-        </div>
-        <div class="skill-item">
-          <span class="skill-item-name">Kali / Ubuntu</span>
-          <div class="skill-bar-wrap"><div class="skill-bar" data-w="85"></div></div>
-          <span class="skill-item-lvl">ADV</span>
-        </div>
+    <div class="skill-card reveal">
+      <div class="skill-head"><div class="skill-badge">IN</div><span class="skill-name">Infrastructure & Networks</span><span class="skill-cat">Sysadmin</span></div>
+      <div class="skill-body">
+        <div class="skill-row"><span class="skill-row-name">Active Directory</span><div class="bar"><i data-w="80"></i></div><span class="skill-lvl">INT</span></div>
+        <div class="skill-row"><span class="skill-row-name">Windows Server</span><div class="bar"><i data-w="78"></i></div><span class="skill-lvl">INT</span></div>
+        <div class="skill-row"><span class="skill-row-name">Zabbix / NOC</span><div class="bar"><i data-w="74"></i></div><span class="skill-lvl">INT</span></div>
+        <div class="skill-row"><span class="skill-row-name">DNS / SNMP</span><div class="bar"><i data-w="82"></i></div><span class="skill-lvl">INT</span></div>
+        <div class="skill-row"><span class="skill-row-name">Kali / Ubuntu</span><div class="bar"><i data-w="85"></i></div><span class="skill-lvl">ADV</span></div>
       </div>
     </div>
 
-    <div class="skill-block reveal">
-      <div class="skill-block-header">
-        <div class="skill-block-icon">AI</div>
-        <span class="skill-block-name">Inteligencia Artificial</span>
-        <span class="skill-block-cat">ML · Security</span>
-      </div>
-      <div class="skill-block-body">
-        <div class="skill-item">
-          <span class="skill-item-name">Machine Learning</span>
-          <div class="skill-bar-wrap"><div class="skill-bar blue" data-w="72"></div></div>
-          <span class="skill-item-lvl">INT</span>
-        </div>
-        <div class="skill-item">
-          <span class="skill-item-name">Scikit-learn</span>
-          <div class="skill-bar-wrap"><div class="skill-bar blue" data-w="70"></div></div>
-          <span class="skill-item-lvl">INT</span>
-        </div>
-        <div class="skill-item">
-          <span class="skill-item-name">Feature Eng.</span>
-          <div class="skill-bar-wrap"><div class="skill-bar blue" data-w="68"></div></div>
-          <span class="skill-item-lvl">INT</span>
-        </div>
-        <div class="skill-item">
-          <span class="skill-item-name">Pandas</span>
-          <div class="skill-bar-wrap"><div class="skill-bar blue" data-w="74"></div></div>
-          <span class="skill-item-lvl">INT</span>
-        </div>
-        <div class="skill-item">
-          <span class="skill-item-name">Phishing Detection</span>
-          <div class="skill-bar-wrap"><div class="skill-bar blue" data-w="76"></div></div>
-          <span class="skill-item-lvl">INT</span>
-        </div>
+    <div class="skill-card reveal">
+      <div class="skill-head"><div class="skill-badge">AI</div><span class="skill-name">Inteligencia Artificial</span><span class="skill-cat">ML · Security</span></div>
+      <div class="skill-body">
+        <div class="skill-row"><span class="skill-row-name">Machine Learning</span><div class="bar"><i data-w="72"></i></div><span class="skill-lvl">INT</span></div>
+        <div class="skill-row"><span class="skill-row-name">Scikit-learn</span><div class="bar"><i data-w="70"></i></div><span class="skill-lvl">INT</span></div>
+        <div class="skill-row"><span class="skill-row-name">Feature Eng.</span><div class="bar"><i data-w="68"></i></div><span class="skill-lvl">INT</span></div>
+        <div class="skill-row"><span class="skill-row-name">Pandas</span><div class="bar"><i data-w="74"></i></div><span class="skill-lvl">INT</span></div>
+        <div class="skill-row"><span class="skill-row-name">Phishing Detection</span><div class="bar"><i data-w="76"></i></div><span class="skill-lvl">INT</span></div>
       </div>
     </div>
 
-    <div class="skill-block full reveal">
-      <div class="skill-block-header">
-        <div class="skill-block-icon">BB</div>
-        <span class="skill-block-name">Bug Bounty & Mobile Security</span>
-        <span class="skill-block-cat">HackerOne · Android · Web/API</span>
-      </div>
-      <div class="skill-block-body" style="display:grid; grid-template-columns:1fr 1fr; gap:10px 48px;">
-        <div class="skill-item">
-          <span class="skill-item-name">APK Reversing · jadx</span>
-          <div class="skill-bar-wrap"><div class="skill-bar blue" data-w="86"></div></div>
-          <span class="skill-item-lvl">ADV</span>
-        </div>
-        <div class="skill-item">
-          <span class="skill-item-name">Recon · subfinder/httpx</span>
-          <div class="skill-bar-wrap"><div class="skill-bar blue" data-w="84"></div></div>
-          <span class="skill-item-lvl">ADV</span>
-        </div>
-        <div class="skill-item">
-          <span class="skill-item-name">Frida / Objection</span>
-          <div class="skill-bar-wrap"><div class="skill-bar blue" data-w="74"></div></div>
-          <span class="skill-item-lvl">INT</span>
-        </div>
-        <div class="skill-item">
-          <span class="skill-item-name">IDOR / SSRF / Auth</span>
-          <div class="skill-bar-wrap"><div class="skill-bar blue" data-w="78"></div></div>
-          <span class="skill-item-lvl">INT</span>
-        </div>
-        <div class="skill-item">
-          <span class="skill-item-name">MobSF · Docker</span>
-          <div class="skill-bar-wrap"><div class="skill-bar blue" data-w="76"></div></div>
-          <span class="skill-item-lvl">INT</span>
-        </div>
-        <div class="skill-item">
-          <span class="skill-item-name">Cert Pinning Bypass</span>
-          <div class="skill-bar-wrap"><div class="skill-bar blue" data-w="70"></div></div>
-          <span class="skill-item-lvl">INT</span>
-        </div>
+    <div class="skill-card full reveal">
+      <div class="skill-head"><div class="skill-badge">BB</div><span class="skill-name">Bug Bounty & Mobile Security</span><span class="skill-cat">HackerOne · Android · Web/API</span></div>
+      <div class="skill-body">
+        <div class="skill-row"><span class="skill-row-name">APK Reversing · jadx</span><div class="bar"><i data-w="86"></i></div><span class="skill-lvl">ADV</span></div>
+        <div class="skill-row"><span class="skill-row-name">Recon · subfinder/httpx</span><div class="bar"><i data-w="84"></i></div><span class="skill-lvl">ADV</span></div>
+        <div class="skill-row"><span class="skill-row-name">Frida / Objection</span><div class="bar"><i data-w="74"></i></div><span class="skill-lvl">INT</span></div>
+        <div class="skill-row"><span class="skill-row-name">IDOR / SSRF / Auth</span><div class="bar"><i data-w="78"></i></div><span class="skill-lvl">INT</span></div>
+        <div class="skill-row"><span class="skill-row-name">MobSF · Docker</span><div class="bar"><i data-w="76"></i></div><span class="skill-lvl">INT</span></div>
+        <div class="skill-row"><span class="skill-row-name">Cert Pinning Bypass</span><div class="bar"><i data-w="70"></i></div><span class="skill-lvl">INT</span></div>
       </div>
     </div>
 
-    <div class="skill-block full reveal">
-      <div class="skill-block-header">
-        <div class="skill-block-icon">DB</div>
-        <span class="skill-block-name">Bases de Datos</span>
-        <span class="skill-block-cat">Data · SQLi Detection</span>
-      </div>
-      <div class="skill-block-body" style="display:grid; grid-template-columns:1fr 1fr; gap:10px 48px;">
-        <div class="skill-item">
-          <span class="skill-item-name">MySQL</span>
-          <div class="skill-bar-wrap"><div class="skill-bar warm" data-w="82"></div></div>
-          <span class="skill-item-lvl">INT</span>
-        </div>
-        <div class="skill-item">
-          <span class="skill-item-name">Stored Procedures</span>
-          <div class="skill-bar-wrap"><div class="skill-bar warm" data-w="70"></div></div>
-          <span class="skill-item-lvl">INT</span>
-        </div>
-        <div class="skill-item">
-          <span class="skill-item-name">SQL Queries / JOINs</span>
-          <div class="skill-bar-wrap"><div class="skill-bar warm" data-w="85"></div></div>
-          <span class="skill-item-lvl">ADV</span>
-        </div>
-        <div class="skill-item">
-          <span class="skill-item-name">Normalización</span>
-          <div class="skill-bar-wrap"><div class="skill-bar warm" data-w="75"></div></div>
-          <span class="skill-item-lvl">INT</span>
-        </div>
-        <div class="skill-item">
-          <span class="skill-item-name">Índices / ERD</span>
-          <div class="skill-bar-wrap"><div class="skill-bar warm" data-w="72"></div></div>
-          <span class="skill-item-lvl">INT</span>
-        </div>
-        <div class="skill-item">
-          <span class="skill-item-name">SQLi Detection</span>
-          <div class="skill-bar-wrap"><div class="skill-bar warm" data-w="88"></div></div>
-          <span class="skill-item-lvl">ADV</span>
-        </div>
+    <div class="skill-card full reveal">
+      <div class="skill-head"><div class="skill-badge">DB</div><span class="skill-name">Bases de Datos</span><span class="skill-cat">Data · SQLi Detection</span></div>
+      <div class="skill-body">
+        <div class="skill-row"><span class="skill-row-name">MySQL</span><div class="bar"><i data-w="82"></i></div><span class="skill-lvl">INT</span></div>
+        <div class="skill-row"><span class="skill-row-name">Stored Procedures</span><div class="bar"><i data-w="70"></i></div><span class="skill-lvl">INT</span></div>
+        <div class="skill-row"><span class="skill-row-name">SQL Queries / JOINs</span><div class="bar"><i data-w="85"></i></div><span class="skill-lvl">ADV</span></div>
+        <div class="skill-row"><span class="skill-row-name">Normalización</span><div class="bar"><i data-w="75"></i></div><span class="skill-lvl">INT</span></div>
+        <div class="skill-row"><span class="skill-row-name">Índices / ERD</span><div class="bar"><i data-w="72"></i></div><span class="skill-lvl">INT</span></div>
+        <div class="skill-row"><span class="skill-row-name">SQLi Detection</span><div class="bar"><i data-w="88"></i></div><span class="skill-lvl">ADV</span></div>
       </div>
     </div>
 
   </div>
 </section>
 
-<!-- ── PROJECTS ── -->
-<section id="projects" style="position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:0 60px 90px;">
-  <div class="section-header reveal">
-    <span class="section-num">02</span>
-    <h2 class="section-title">Proyectos destacados</h2>
-    <div class="section-line"></div>
+<!-- PROJECTS -->
+<section class="section" id="projects">
+  <div class="sec-head reveal">
+    <span class="sec-num">02</span>
+    <h2 class="sec-title">Proyectos destacados</h2>
+    <span class="sec-line"></span>
   </div>
 
-  <div class="projects-list">
-    <div class="project-card reveal">
+  <div class="projects">
+
+    <div class="project reveal">
       <div>
-        <div class="project-badge red">Bug Bounty · HackerOne</div>
-        <div class="project-title">Bug Bounty — Reportes en HackerOne · Web · API · Mobile · Web3</div>
-        <p class="project-desc">
-          Investigación activa con varios reportes enviados en HackerOne —severidades
-          <strong style="color:var(--warn);font-weight:500;">High</strong> y
-          <strong style="color:var(--accent2);font-weight:500;">Medium</strong>— sobre apps
-          Android, APIs y superficies web, cloud y Web3. Flujo completo: recon y mapeo de assets,
-          reversing de APKs (jadx) y análisis dinámico (Frida, MobSF), explotación y redacción de
-          PoC bajo metodología OWASP. Hallazgos anonimizados (programas no divulgados):
+        <div class="proj-badge amber">Bug Bounty · HackerOne</div>
+        <div class="proj-title">Bug Bounty — Reportes en HackerOne · Web · API · Mobile · Web3</div>
+        <p class="proj-desc">
+          Investigación activa con varios reportes enviados en HackerOne (severidades High y
+          Medium) sobre apps Android, APIs y superficies web, cloud y Web3. Flujo completo: recon
+          y mapeo de assets, reversing de APKs (jadx) y análisis dinámico (Frida, MobSF),
+          explotación y redacción de PoC bajo metodología OWASP. Hallazgos anonimizados (programas
+          no divulgados):
         </p>
         <ul class="findings">
           <li><span class="sev high">High</span> Business logic — forgery de visitas de afiliado por parámetro aceptado sin validación</li>
@@ -1053,277 +375,204 @@
           <li><span class="sev med">Med</span> Falta de rate limiting en envío de OTP — SMS/voz/WhatsApp bombing y toll fraud</li>
           <li><span class="sev med">Med</span> Information disclosure — env.json, API keys y errores verbosos con internals</li>
         </ul>
-        <div class="project-stack">
-          <span class="stack-item">HackerOne</span>
-          <span class="stack-item">Burp Suite</span>
-          <span class="stack-item">jadx</span>
-          <span class="stack-item">Frida</span>
-          <span class="stack-item">MobSF</span>
-          <span class="stack-item">Recon Automation</span>
+        <div class="tags">
+          <span class="tag">HackerOne</span><span class="tag">Burp Suite</span><span class="tag">jadx</span>
+          <span class="tag">Frida</span><span class="tag">MobSF</span><span class="tag">Recon Automation</span>
         </div>
       </div>
-      <div class="project-num">01</div>
+      <div class="proj-num">01</div>
     </div>
 
-    <div class="project-card reveal">
+    <div class="project reveal">
       <div>
-        <div class="project-badge">IA · Machine Learning</div>
-        <div class="project-title">Detector de Phishing con ML – IU Training</div>
-        <p class="project-desc">
-          Proyecto del bootcamp de Inteligencia Artificial Nivel Básico (159 h · MinTIC / Talento Tech · IU Training).
-          Modelo de Machine Learning entrenado para clasificar URLs y correos como phishing o legítimos,
-          aplicando feature engineering sobre características de dominio, estructura de URL y patrones textuales.
-          Evaluación con métricas de precisión, recall y F1-score.
+        <div class="proj-badge">IA · Machine Learning</div>
+        <div class="proj-title">Detector de Phishing con ML — IU Training</div>
+        <p class="proj-desc">
+          Proyecto del bootcamp de Inteligencia Artificial Nivel Básico (159 h · MinTIC / Talento
+          Tech · IU Training). Modelo de Machine Learning entrenado para clasificar URLs y correos
+          como phishing o legítimos, aplicando feature engineering sobre características de dominio,
+          estructura de URL y patrones textuales. Evaluación con métricas de precisión, recall y F1-score.
         </p>
-        <div class="project-stack">
-          <span class="stack-item">Python</span>
-          <span class="stack-item">Scikit-learn</span>
-          <span class="stack-item">Feature Engineering</span>
-          <span class="stack-item">Phishing Detection</span>
-          <span class="stack-item">Talento Tech · MinTIC</span>
+        <div class="tags">
+          <span class="tag">Python</span><span class="tag">Scikit-learn</span><span class="tag">Feature Engineering</span>
+          <span class="tag">Phishing Detection</span><span class="tag">Talento Tech · MinTIC</span>
         </div>
       </div>
-      <div class="project-num">02</div>
+      <div class="proj-num">02</div>
     </div>
 
-    <div class="project-card reveal">
+    <div class="project reveal">
       <div>
-        <div class="project-badge red">Research</div>
-        <div class="project-title">Amenazas IA en Ciberseguridad – Paper Académico</div>
-        <p class="project-desc">
-          Investigación académica sobre amenazas potenciadas con IA: deepfakes, WormGPT,
-          malware polimórfico y phishing avanzado. Presentada como ponente (modalidad póster)
-          en el XVIII Encuentro Departamental RREDSI · IV REDCOLSI — Nodo Caldas (2026).
-          Formato IEEE con citaciones y estructura de congreso.
+        <div class="proj-badge amber">Research</div>
+        <div class="proj-title">Amenazas IA en Ciberseguridad — Paper Académico</div>
+        <p class="proj-desc">
+          Investigación académica sobre amenazas potenciadas con IA: deepfakes, WormGPT, malware
+          polimórfico y phishing avanzado. Presentada como ponente (modalidad póster) en el XVIII
+          Encuentro Departamental RREDSI · IV REDCOLSI — Nodo Caldas (2026). Formato IEEE con
+          citaciones y estructura de congreso.
         </p>
-        <div class="project-stack">
-          <span class="stack-item">IEEE Format</span>
-          <span class="stack-item">WormGPT</span>
-          <span class="stack-item">Deepfakes</span>
-          <span class="stack-item">Malware Analysis</span>
-          <span class="stack-item">RREDSI · Ponente</span>
+        <div class="tags">
+          <span class="tag">IEEE Format</span><span class="tag">WormGPT</span><span class="tag">Deepfakes</span>
+          <span class="tag">Malware Analysis</span><span class="tag">RREDSI · Ponente</span>
         </div>
       </div>
-      <div class="project-num">03</div>
+      <div class="proj-num">03</div>
     </div>
 
-    <div class="project-card reveal">
+    <div class="project reveal">
       <div>
-        <div class="project-badge blue">Sysadmin · Infraestructura</div>
-        <div class="project-title">Datacenter On-Premise — Proyecto Final Sistemas Operativos II</div>
-        <p class="project-desc">
+        <div class="proj-badge">Sysadmin · Infraestructura</div>
+        <div class="proj-title">Datacenter On-Premise — Proyecto Final Sistemas Operativos II</div>
+        <p class="proj-desc">
           Diseño e implementación de un datacenter on-premise completo para una empresa simulada,
           montado en VirtualBox con red entre hosts (switch/router) e integrando servicios Windows
           y Linux con hardening en cada capa. Servicios desplegados: Windows Server 2022 (Active
           Directory, DNS, WSUS) y hardening por GPO sobre clientes Windows 11 —bloqueo de
-          CMD/PowerShell/regedit/Panel de control, screen-lock y folder redirection—; servidor
-          LEMP con Laravel para señalización digital; Samba (CentOS) con permisos por áreas; SFTP
+          CMD/PowerShell/regedit/Panel de control, screen-lock y folder redirection—; servidor LEMP
+          con Laravel para señalización digital; Samba (CentOS) con permisos por áreas; SFTP
           (OpenSSH + UFW); NOC con Zabbix y dashboard centralizado de CPU/memoria; y nube privada
           Nextcloud. Bastionado transversal: firewall, bloqueo de root por SSH y políticas de seguridad.
         </p>
-        <div class="project-stack">
-          <span class="stack-item">Windows Server 2022</span>
-          <span class="stack-item">Active Directory</span>
-          <span class="stack-item">DNS / WSUS</span>
-          <span class="stack-item">GPO Hardening</span>
-          <span class="stack-item">Nginx + Laravel</span>
-          <span class="stack-item">MySQL</span>
-          <span class="stack-item">Samba</span>
-          <span class="stack-item">SFTP / OpenSSH</span>
-          <span class="stack-item">Zabbix NOC</span>
-          <span class="stack-item">Nextcloud</span>
-          <span class="stack-item">Ubuntu 24.04 / CentOS</span>
-          <span class="stack-item">VirtualBox</span>
+        <div class="tags">
+          <span class="tag">Windows Server 2022</span><span class="tag">Active Directory</span><span class="tag">DNS / WSUS</span>
+          <span class="tag">GPO Hardening</span><span class="tag">Nginx + Laravel</span><span class="tag">MySQL</span>
+          <span class="tag">Samba</span><span class="tag">SFTP / OpenSSH</span><span class="tag">Zabbix NOC</span>
+          <span class="tag">Nextcloud</span><span class="tag">Ubuntu 24.04 / CentOS</span><span class="tag">VirtualBox</span>
         </div>
       </div>
-      <div class="project-num">04</div>
+      <div class="proj-num">04</div>
     </div>
+
   </div>
 </section>
 
-<!-- ── EDUCATION ── -->
+<!-- EDUCATION -->
 <section class="section" id="education">
-  <div class="section-header reveal">
-    <span class="section-num">03</span>
-    <h2 class="section-title">Educación & Laboratorios</h2>
-    <div class="section-line"></div>
+  <div class="sec-head reveal">
+    <span class="sec-num">03</span>
+    <h2 class="sec-title">Educación & Laboratorios</h2>
+    <span class="sec-line"></span>
   </div>
 
   <div class="timeline">
-    <div class="timeline-item reveal">
-      <div class="timeline-date">2023 – Presente</div>
-      <div class="timeline-title">Ingeniería en Seguridad Informática</div>
-      <div class="timeline-sub">Universidad de Manizales · Semestre VI</div>
-      <div class="timeline-desc">
-        Pentest · Forense Digital · Seguridad Web · Redes · Bases de Datos · Legislación en Ciberseguridad
-      </div>
+    <div class="tl-item reveal">
+      <div class="tl-date">2023 – Presente</div>
+      <div class="tl-title">Ingeniería en Seguridad Informática</div>
+      <div class="tl-sub">Universidad de Manizales · Semestre VI</div>
+      <div class="tl-desc">Pentest · Forense Digital · Seguridad Web · Redes · Bases de Datos · Legislación en Ciberseguridad</div>
     </div>
-    <div class="timeline-item reveal">
-      <div class="timeline-date">May 2026</div>
-      <div class="timeline-title">Ponente — RREDSI / REDCOLSI Nodo Caldas</div>
-      <div class="timeline-sub">XVIII Enc. Departamental RREDSI · IV REDCOLSI · Manizales</div>
-      <div class="timeline-desc">
-        Ponencia en modalidad póster del proyecto «Ciberseguridad frente al avance de la
-        inteligencia artificial: amenazas emergentes, casos reales y propuestas de solución»,
-        en el encuentro departamental de semilleros de investigación, Nodo Caldas.
-      </div>
+    <div class="tl-item reveal">
+      <div class="tl-date">May 2026</div>
+      <div class="tl-title">Ponente — RREDSI / REDCOLSI Nodo Caldas</div>
+      <div class="tl-sub">XVIII Enc. Departamental RREDSI · IV REDCOLSI · Manizales</div>
+      <div class="tl-desc">Ponencia en modalidad póster del proyecto «Ciberseguridad frente al avance de la inteligencia artificial: amenazas emergentes, casos reales y propuestas de solución», en el encuentro departamental de semilleros de investigación, Nodo Caldas.</div>
     </div>
-    <div class="timeline-item reveal">
-      <div class="timeline-date">Abr 2026</div>
-      <div class="timeline-title">BSides Colombia 2026 — Pereira</div>
-      <div class="timeline-sub">Asistente & Voluntario · 16 horas académicas</div>
-      <div class="timeline-desc">
-        Evento internacional de ciberseguridad. Conferencias técnicas y sesiones especializadas
-        en seguridad ofensiva, defensiva, investigación y gestión de riesgos, además de labores
-        de voluntariado en la organización del evento.
-      </div>
+    <div class="tl-item reveal">
+      <div class="tl-date">Abr 2026</div>
+      <div class="tl-title">BSides Colombia 2026 — Pereira</div>
+      <div class="tl-sub">Asistente & Voluntario · 16 horas académicas</div>
+      <div class="tl-desc">Evento internacional de ciberseguridad. Conferencias técnicas y sesiones especializadas en seguridad ofensiva, defensiva, investigación y gestión de riesgos, además de labores de voluntariado en la organización del evento.</div>
     </div>
-    <div class="timeline-item reveal">
-      <div class="timeline-date">Sep 2025</div>
-      <div class="timeline-title">Bootcamp Inteligencia Artificial — Nivel Básico</div>
-      <div class="timeline-sub">MinTIC · Talento Tech · IU Training (U. de Antioquia / U. de Caldas) · 159 h</div>
-      <div class="timeline-desc">
-        Bootcamp de 159 horas culminado con éxito (programa Talento Tech del MinTIC). Proyecto
-        práctico de Machine Learning: modelo de detección de phishing entrenado con Python y
-        Scikit-learn, feature engineering y evaluación con métricas de precisión, recall y F1-score.
-      </div>
+    <div class="tl-item reveal">
+      <div class="tl-date">Sep 2025</div>
+      <div class="tl-title">Bootcamp Inteligencia Artificial — Nivel Básico</div>
+      <div class="tl-sub">MinTIC · Talento Tech · IU Training (U. de Antioquia / U. de Caldas) · 159 h</div>
+      <div class="tl-desc">Bootcamp de 159 horas culminado con éxito (programa Talento Tech del MinTIC). Proyecto práctico de Machine Learning: modelo de detección de phishing entrenado con Python y Scikit-learn, feature engineering y evaluación con métricas de precisión, recall y F1-score.</div>
     </div>
-    <div class="timeline-item reveal">
-      <div class="timeline-date">Activo</div>
-      <div class="timeline-title">HackTheBox – Starting Point & Beyond</div>
-      <div class="timeline-sub">CTF Platform</div>
-      <div class="timeline-desc">
-        Máquinas de práctica en entornos Windows/Linux. Flujo enumeración → explotación.
-        Uso de Metasploit, Nmap y herramientas de análisis de red.
-      </div>
+    <div class="tl-item reveal">
+      <div class="tl-date">Activo</div>
+      <div class="tl-title">HackTheBox — Starting Point & Beyond</div>
+      <div class="tl-sub">CTF Platform</div>
+      <div class="tl-desc">Máquinas de práctica en entornos Windows/Linux. Flujo enumeración → explotación. Uso de Metasploit, Nmap y herramientas de análisis de red.</div>
     </div>
-    <div class="timeline-item reveal">
-      <div class="timeline-date">Lab Académico</div>
-      <div class="timeline-title">Propuesta Laboratorio Forense Digital</div>
-      <div class="timeline-sub">Universidad de Manizales · Col. Policía Metropolitana</div>
-      <div class="timeline-desc">
-        Documentación ejecutiva y técnica para implementación de laboratorio forense:
-        Autopsy, SIFT, Volatility, Wireshark, FTK Imager. Colaboración interinstitucional.
-      </div>
+    <div class="tl-item reveal">
+      <div class="tl-date">Lab Académico</div>
+      <div class="tl-title">Propuesta Laboratorio Forense Digital</div>
+      <div class="tl-sub">Universidad de Manizales · Col. Policía Metropolitana</div>
+      <div class="tl-desc">Documentación ejecutiva y técnica para implementación de laboratorio forense: Autopsy, SIFT, Volatility, Wireshark, FTK Imager. Colaboración interinstitucional.</div>
     </div>
   </div>
 </section>
 
-<!-- ── CONTACT ── -->
+<!-- CONTACT -->
 <section class="section" id="contact">
-  <div class="section-header reveal">
-    <span class="section-num">04</span>
-    <h2 class="section-title">Contacto</h2>
-    <div class="section-line"></div>
+  <div class="sec-head reveal">
+    <span class="sec-num">04</span>
+    <h2 class="sec-title">Contacto</h2>
+    <span class="sec-line"></span>
   </div>
 
-  <div class="contact-grid reveal">
+  <div class="contact reveal">
 
-    <div class="contact-card ig" onclick="window.open('https://instagram.com/duvanriascos','_blank')">
-      <div class="contact-label">
-        <svg class="contact-label-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-          <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
-          <circle cx="12" cy="12" r="4"/>
-          <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none"/>
-        </svg>
-        Instagram
+    <div class="card" onclick="window.open('https://github.com/djhonnyrm','_blank')">
+      <div class="ic">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
       </div>
-      <div class="contact-value">
-        <a href="https://instagram.com/duvanriascos" target="_blank">@duvanriascos</a>
-        <span class="contact-arrow">↗</span>
+      <div>
+        <div class="card-label">GitHub</div>
+        <div class="card-value">djhonnyrm</div>
       </div>
-      <div class="contact-meta">Contenido · Ciberseguridad · Tech</div>
+      <span class="ext">↗</span>
     </div>
 
-    <div class="contact-card gh" onclick="window.open('https://github.com/djhonnyrm','_blank')">
-      <div class="contact-label">
-        <svg class="contact-label-icon" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
-        </svg>
-        GitHub
+    <div class="card" onclick="window.open('https://hackthebox.com','_blank')">
+      <div class="ic">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><polygon points="12 2 22 7 22 17 12 22 2 17 2 7"/><polyline points="12 22 12 12"/><polyline points="22 7 12 12"/><polyline points="2 7 12 12"/></svg>
       </div>
-      <div class="contact-value">
-        <a href="https://github.com/djhonnyrm" target="_blank">djhonnyrm</a>
-        <span class="contact-arrow">↗</span>
+      <div>
+        <div class="card-label">HackTheBox</div>
+        <div class="card-value">djhonnyrm</div>
       </div>
-      <div class="contact-meta">Proyectos · Labs · Scripts</div>
+      <span class="ext">↗</span>
     </div>
 
-    <div class="contact-card gh" onclick="window.open('https://hackthebox.com','_blank')">
-      <div class="contact-label">
-        <svg class="contact-label-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-          <polygon points="12 2 22 7 22 17 12 22 2 17 2 7"/>
-          <polyline points="12 22 12 12"/>
-          <polyline points="22 7 12 12"/>
-          <polyline points="2 7 12 12"/>
-        </svg>
-        HackTheBox
+    <div class="card" onclick="window.open('https://instagram.com/duvanriascos','_blank')">
+      <div class="ic">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.6" fill="currentColor" stroke="none"/></svg>
       </div>
-      <div class="contact-value">
-        <a href="https://hackthebox.com" target="_blank">djhonnyrm</a>
-        <span class="contact-arrow">↗</span>
+      <div>
+        <div class="card-label">Instagram</div>
+        <div class="card-value">@duvanriascos</div>
       </div>
-      <div class="contact-meta">CTF · Starting Point · Active</div>
+      <span class="ext">↗</span>
     </div>
 
-    <div class="contact-card mail" onclick="window.location.href='mailto:Jduvan762@gmail.com'">
-      <div class="contact-label">
-        <svg class="contact-label-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-          <rect x="2" y="4" width="20" height="16" rx="2"/>
-          <polyline points="2,4 12,13 22,4"/>
-        </svg>
-        Email
+    <div class="card" onclick="window.location.href='mailto:jduvan762@gmail.com'">
+      <div class="ic">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,5 12,13 22,5"/></svg>
       </div>
-      <div class="contact-value">
-        <a href="/cdn-cgi/l/email-protection#e9a38d9c9f8887dedfdba98e84888085c78a8684"><span class="__cf_email__" data-cfemail="5319372625323d64656113343e323a3f7d303c3e">[email&#160;protected]</span></a>
-        <span class="contact-arrow">↗</span>
+      <div>
+        <div class="card-label">Email</div>
+        <div class="card-value">jduvan762@gmail.com</div>
       </div>
-      <div class="contact-meta">Respuesta en menos de 24h</div>
+      <span class="ext">↗</span>
     </div>
 
   </div>
 </section>
 
 <footer>
-  <span>Jhonny Duvan Riascos Mosquera · 2026</span>
-  <span>Ingeniería en Seguridad Informática · Universidad de Manizales</span>
+  <div class="foot">
+    <span>Jhonny Duvan Riascos Mosquera · 2026</span>
+    <span>Ingeniería en Seguridad Informática · Universidad de Manizales</span>
+  </div>
 </footer>
 
 <script>
-  // Scroll reveal
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((e, i) => {
-      if (e.isIntersecting) {
-        setTimeout(() => e.target.classList.add('visible'), i * 55);
-      }
-    });
-  }, { threshold: 0.06 });
-  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 
-  // Skill bars animate on entry
-  const barObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.querySelectorAll('.skill-bar').forEach(bar => {
-          bar.style.width = bar.getAttribute('data-w') + '%';
-        });
-        barObserver.unobserve(entry.target);
+  const bo = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.querySelectorAll('.bar > i').forEach(b => b.style.width = b.dataset.w + '%');
+        bo.unobserve(e.target);
       }
     });
   }, { threshold: 0.2 });
-  document.querySelectorAll('.skill-block').forEach(block => {
-    block.querySelectorAll('.skill-bar').forEach(bar => bar.style.width = '0%');
-    barObserver.observe(block);
-  });
-
-  // Nav logo flicker
-  const logo = document.querySelector('.nav-logo');
-  setInterval(() => {
-    if (Math.random() > 0.96) {
-      logo.style.opacity = '0.3';
-      setTimeout(() => logo.style.opacity = '1', 60);
-    }
-  }, 600);
+  document.querySelectorAll('.skill-card').forEach(c => bo.observe(c));
 </script>
 </body>
 </html>
