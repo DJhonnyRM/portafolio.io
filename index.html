@@ -445,6 +445,25 @@
   }
   .stack-item:hover { color:var(--accent2); border-color:var(--accent2); background:var(--accent2-dim); }
 
+  /* anonymized bug bounty findings list */
+  .findings {
+    list-style:none; display:flex; flex-direction:column; gap:8px;
+    margin:2px 0 20px; max-width:640px;
+  }
+  .findings li {
+    font-family:var(--mono); font-size:11.5px;
+    color:var(--ink-mid); line-height:1.5; font-weight:300;
+    display:flex; gap:11px; align-items:baseline;
+  }
+  .sev {
+    font-family:var(--mono); font-size:9px; font-weight:500;
+    letter-spacing:0.08em; padding:2px 0; min-width:46px;
+    text-align:center; border:1px solid var(--border-mid);
+    flex-shrink:0; text-transform:uppercase;
+  }
+  .sev.high { color:var(--warn); border-color:rgba(245,158,11,0.55); }
+  .sev.med  { color:var(--accent2); border-color:rgba(56,178,255,0.45); }
+
   .project-num {
     font-family:var(--syne); font-size:72px;
     font-weight:800; color:transparent;
@@ -648,9 +667,9 @@
       <div class="hero-subtitle">Information Security Engineering · Sem. VI</div>
       <p class="hero-desc">
         Estudiante de Ingeniería en Seguridad Informática en la Universidad de Manizales.
-        Investigador activo de bug bounty en HackerOne — apps Android y superficies web/API —
-        además de pruebas de penetración y análisis forense digital. Apasionado por los CTF
-        en HackTheBox y la automatización con IA.
+        Investigador activo de bug bounty en HackerOne, con varios reportes enviados en
+        superficies web, API, móviles (Android), cloud y Web3, además de pruebas de penetración
+        y análisis forense digital. Apasionado por los CTF en HackTheBox y la automatización con IA.
       </p>
       <div class="hero-actions">
         <a href="https://github.com/djhonnyrm" class="btn" target="_blank">
@@ -1015,21 +1034,31 @@
     <div class="project-card reveal">
       <div>
         <div class="project-badge red">Bug Bounty · HackerOne</div>
-        <div class="project-title">Investigación de Bug Bounty — Mobile & Web/API</div>
+        <div class="project-title">Bug Bounty — Reportes en HackerOne · Web · API · Mobile · Web3</div>
         <p class="project-desc">
-          Investigación activa de seguridad en programas de HackerOne sobre aplicaciones
-          Android y superficies web/API. Flujo completo: reconocimiento y mapeo de assets,
-          reversing de APKs con jadx y análisis estático/dinámico (Frida, MobSF), e
-          identificación de fallos de lógica y autorización —IDOR, SSRF, bypass de
-          autenticación— bajo metodología OWASP. Trabajo continuo de recon, threat modeling
-          y estudio de reportes divulgados.
+          Investigación activa con varios reportes enviados en HackerOne —severidades
+          <strong style="color:var(--warn);font-weight:500;">High</strong> y
+          <strong style="color:var(--accent2);font-weight:500;">Medium</strong>— sobre apps
+          Android, APIs y superficies web, cloud y Web3. Flujo completo: recon y mapeo de assets,
+          reversing de APKs (jadx) y análisis dinámico (Frida, MobSF), explotación y redacción de
+          PoC bajo metodología OWASP. Hallazgos anonimizados (programas no divulgados):
         </p>
+        <ul class="findings">
+          <li><span class="sev high">High</span> Business logic — forgery de visitas de afiliado por parámetro aceptado sin validación</li>
+          <li><span class="sev med">Med</span> IDOR / BOLA horizontal en API multi-tenant — acceso a datos de otros usuarios</li>
+          <li><span class="sev med">Med</span> Interceptación de Authorization Code vía custom URI scheme (OAuth / SSO / WebAuthn)</li>
+          <li><span class="sev med">Med</span> Deeplink exportado carga URL/JS controlado por el atacante en WebView (Android)</li>
+          <li><span class="sev med">Med</span> Bucket S3 sin autenticación expone PKI / almacén de secretos de producción</li>
+          <li><span class="sev med">Med</span> Bypass de validación de rango en endpoint RPC de blockchain (Web3)</li>
+          <li><span class="sev med">Med</span> Falta de rate limiting en envío de OTP — SMS/voz/WhatsApp bombing y toll fraud</li>
+          <li><span class="sev med">Med</span> Information disclosure — env.json, API keys y errores verbosos con internals</li>
+        </ul>
         <div class="project-stack">
           <span class="stack-item">HackerOne</span>
+          <span class="stack-item">Burp Suite</span>
           <span class="stack-item">jadx</span>
           <span class="stack-item">Frida</span>
           <span class="stack-item">MobSF</span>
-          <span class="stack-item">Burp Suite</span>
           <span class="stack-item">Recon Automation</span>
         </div>
       </div>
